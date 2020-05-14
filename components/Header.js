@@ -3,28 +3,26 @@ import { StyleSheet, Text, View, Image, Button } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const ImgLogo = require("../assets/img/ssdp_logo.png");
-const IconMenu = require("../assets/icons/menu.svg");
+import IconMenu from "../assets/icons/menu.svg";
+
 
 export default function Header({ navigation }) {
   return (
     <View style={styles.header}>
-      <TouchableOpacity
-        style={styles.btnDrawer}
-        onPress={() => navigation.toggleDrawer()}>
-        <Image
-          style={styles.logo}
-          source={IconMenu}
-          resizeMode="contain" />
-      </TouchableOpacity>
+      <View style={styles.btnDrawer}>
+        <TouchableOpacity
+          onPress={() => navigation.toggleDrawer()}>
+          <IconMenu
+
+            color={'white'}
+            width={30}
+            height={30} />
+        </TouchableOpacity>
+      </View>
       <Image
         style={styles.logo}
         source={ImgLogo}
         resizeMode="contain" />
-      <TouchableOpacity
-        style={styles.btnDrawer}
-        onPress={() => navigation.toggleDrawer()}>
-        <Text>Cloche</Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -32,16 +30,22 @@ export default function Header({ navigation }) {
 const styles = StyleSheet.create({
   header: {
     flex: 1,
+    position: 'relative',
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
+    height: 100,
     paddingTop: 20,
-    backgroundColor: '#109CF1'
+    backgroundColor: '#00528C'
   },
   logo: {
-    width: '60%'
+    width: '50%'
   },
   btnDrawer: {
+    position: 'absolute',
+    left: 20,
+    top: 62,
+    zIndex: 2
   }
 });
