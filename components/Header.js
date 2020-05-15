@@ -13,7 +13,6 @@ export default function Header({ navigation }) {
         <TouchableOpacity
           onPress={() => navigation.toggleDrawer()}>
           <IconMenu
-
             color={'white'}
             width={30}
             height={30} />
