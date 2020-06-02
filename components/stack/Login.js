@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#109CF1'
+    backgroundColor: '#00528C'
   },
   logo: {
     width: '80%',
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     borderRadius: 5
   },
   btnText: {
-    color: '#109CF1',
+    color: '#00528C',
     fontWeight: 'bold'
   }
 });

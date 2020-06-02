@@ -5,7 +5,8 @@ import moment from 'moment';
 import 'moment/locale/fr';
 
 import Header from "../Header";
-
+import HotelDetails from "../stack/HotelDetails"
+import utils from '../../app.utils'
 import IconCalendar from "../../assets/icons/calendar.svg";
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 
@@ -13,6 +14,23 @@ export default function Home({ navigation }) {
 
   const [selectedDate, setSelectedDate] = useState('');
   const [openDatePicker, setOpenDatePicker] = useState(false);
+  const [list, setList] = useState([]);
+
+  // Methods
+  const navigateToProposalDetails = id => {
+    navigation.navigate("HotelDetails", { id: id });
+  }
+
+  // useEffect(() => {
+  //   // fetch proposals list
+  //   console.log("will fetch porposal list")
+  //   utils.fetch('/proposals', {
+  //     method: "GET"
+  //   }).then(res => {
+  //     setList(res.data.list);
+  //   })
+  //     .catch(error => console.log(error))
+  // }, []);
 
   return (
     <View style={styles.container}>
@@ -221,7 +239,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: 105,
-    height:35,
+    height: 35,
     marginTop: 10,
     marginBottom: 15,
     borderRadius: 5
