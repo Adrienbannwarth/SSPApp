@@ -15,6 +15,7 @@ import Notes from "./components/tabs/Notes";
 
 //Stack
 import Login from "./components/stack/Login";
+import HotelDetails from "./components/stack/HotelDetails";
 
 const AuthStack = createStackNavigator();
 const AuthStackScreen = () => (
@@ -56,6 +57,7 @@ const Drawer = createDrawerNavigator();
 const DrawerScreen = () => (
   <Drawer.Navigator initialRouteName="Profile">
     <Drawer.Screen name="Home" component={TabsScreen} />
+    <Drawer.Screen name="HotelDetails" component={HotelDetails} />
   </Drawer.Navigator>
 );
 
