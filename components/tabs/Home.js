@@ -117,7 +117,7 @@ export default function Home({ navigation }) {
           </TouchableOpacity>
         </ScrollView>
       </View>
-    </View >
+    </View>
   );
 }
 
