@@ -1,11 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, Button, TouchableOpacity, TextInput } from 'react-native';
-import { AuthContext } from "../../context";
-
+// import { AuthContext } from "../../context";
+import utils from '../../app.utils';
 const ImgLogo = require("../../assets/img/ssdp_logo.png");
 
 export default function Login(navigation) {
-  const { signIn } = React.useContext(AuthContext);
+  // const { signIn } = React.useContext(AuthContext);
+
+  /** States */
+  const [stateEmail, setStateEmail] = useState(null)
+  const [statePassword, setStatePassword] = useState(null)
+
+  const submitLogin = () => {
+
+    if (!stateEmail || !statePassword) {
+      // show you must enter email and password!
+    } else {
+      utils.fetchForm("/auth/signin", {
+        "email": stateEmail,
+        "password": statePassword
+      }).then(response => {
+        if (response.error) {
+          // credentials or invalid
+        } else {
+          localStorage.setItem("access_token", response.data.token)
+          history.push('/')
+        }
+      })
+        .catch(error => {
+          console.error(error)
+        })
+    }
+  }
+
   return (
     <View style={styles.container}>
       <Image
@@ -15,18 +42,20 @@ export default function Login(navigation) {
       <View style={styles.form}>
         <TextInput
           style={styles.input}
+          onChangeText={stateEmail => setStateEmail(stateEmail)}
           placeholder="Adresse e-mail"
           placeholderTextColor="white"
         ></TextInput>
 
         <TextInput
           style={styles.input}
+          onChangeText={statePassword => setStatePassword(statePassword)}
           placeholder="Mot de passe"
           placeholderTextColor="white"
         ></TextInput>
         <TouchableOpacity
           style={styles.btn}
-          onPress={() => signIn()}>
+          onPress={() => submitLogin()}>
           <Text style={styles.btnText}> Se connecter</Text>
         </TouchableOpacity>
       </View>
