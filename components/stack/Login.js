@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, Button, TouchableOpacity, TextInput } from 'react-native';
-// import { AuthContext } from "../../context";
+import { AuthContext } from "../../context";
 import utils from '../../app.utils';
+import { NavigationEvents } from 'react-navigation';
 const ImgLogo = require("../../assets/img/ssdp_logo.png");
 
 export default function Login(navigation) {
-  // const { signIn } = React.useContext(AuthContext);
+  const { signIn } = React.useContext(AuthContext);
 
   /** States */
   const [stateEmail, setStateEmail] = useState(null)
@@ -13,24 +14,26 @@ export default function Login(navigation) {
 
   const submitLogin = () => {
 
-    if (!stateEmail || !statePassword) {
-      // show you must enter email and password!
-    } else {
-      utils.fetchForm("/auth/signin", {
-        "email": stateEmail,
-        "password": statePassword
-      }).then(response => {
-        if (response.error) {
-          // credentials or invalid
-        } else {
-          localStorage.setItem("access_token", response.data.token)
-          history.push('/')
-        }
-      })
-        .catch(error => {
-          console.error(error)
-        })
-    }
+    // if (!stateEmail || !statePassword) {
+    //   // show you must enter email and password!
+    // } else {
+    //   utils.fetchForm("/auth/signin", {
+    //     "email": stateEmail,
+    //     "password": statePassword
+    //   }).then(response => {
+    //     if (response.error) {
+    //       // credentials or invalid
+    //     } else {
+    //       localStorage.setItem("access_token", response.data.token)
+    //       history.push('/')
+    //     }
+    //   })
+    //     .catch(error => {
+    //       console.error(error)
+    //     })
+    // }
+
+    // navigation.navigate('HomeScreenStack')
   }
 
   return (
@@ -55,7 +58,7 @@ export default function Login(navigation) {
         ></TextInput>
         <TouchableOpacity
           style={styles.btn}
-          onPress={() => submitLogin()}>
+          onPress={() => signIn()}>
           <Text style={styles.btnText}> Se connecter</Text>
         </TouchableOpacity>
       </View>

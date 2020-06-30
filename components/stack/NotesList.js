@@ -11,7 +11,10 @@ export default function NotesList({ navigation }) {
       <Header navigation={navigation} />
       <View style={styles.tabHeader}>
         <Text style={styles.tabTitle}>Mes notes</Text>
-        <SearchBar></SearchBar>
+        <SearchBar     
+        inputStyle={{backgroundColor: 'white'}}
+        containerStyle={{backgroundColor: 'white', borderWidth: 1, borderRadius: 5}}
+    ></SearchBar>
       </View>
       <View style={styles.tabContent}>
         <ScrollView>
@@ -22,9 +25,8 @@ export default function NotesList({ navigation }) {
                 marginLeft: 0,
                 marginRight: 0,
                 marginBottom: 0,
-
               }}
-              onPress={() => navigation.navigate('NoteDetails')}
+              onPress={() => navigation.navigate('Details')}
               title="Voir la note"
             />
           </Card>
@@ -48,5 +50,5 @@ const styles = StyleSheet.create({
   },
   tabContent: {
     flex: 6,
-  },
+  }
 });
