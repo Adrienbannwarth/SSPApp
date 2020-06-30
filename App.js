@@ -5,8 +5,6 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { AuthContext } from "./context";
-
 //Tab
 import Home from "./components/tabs/Home";
 import Contacts from "./components/tabs/Contacts";
@@ -17,29 +15,28 @@ import Notes from "./components/tabs/Notes";
 import Login from "./components/stack/Login";
 import HotelDetails from "./components/stack/HotelDetails";
 
-const AuthStack = createStackNavigator();
-const AuthStackScreen = () => (
-  <AuthStack.Navigator>
-    <AuthStack.Screen
-      name="Login"
-      component={Login}
-      options={{ headerShown: false }}
-    />
-  </AuthStack.Navigator>
-);
-
 const Tabs = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
 
 const HomeStackScreen = () => (
-  <HomeStack.Navigator>
-    <HomeStack.Screen name="Home" component={Home} />
+  <HomeStack.Navigator
+    initialRouteName="Login"
+  >
     <HomeStack.Screen
+      name="Home"
+      component={TabsScreen}
+      options={{ headerShown: false }} />
+    {/* <HomeStack.Screen
       name="Details"
       component={Details}
       options={({ route }) => ({
         title: route.params.name
       })}
+    /> */}
+    <HomeStack.Screen
+      name="Login"
+      component={Login}
+      options={{ headerShown: false }}
     />
   </HomeStack.Navigator>
 );
@@ -74,8 +71,8 @@ const RootStackScreen = ({ userToken }) => (
       />
     ) : (
         <RootStack.Screen
-          name="Auth"
-          component={AuthStackScreen}
+          name="Login"
+          component={Login}
           options={{
             animationEnabled: false
           }}
@@ -88,23 +85,6 @@ export default () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [userToken, setUserToken] = React.useState(null);
 
-  const authContext = React.useMemo(() => {
-    return {
-      signIn: () => {
-        setIsLoading(false);
-        setUserToken("asdf");
-      },
-      signUp: () => {
-        setIsLoading(false);
-        setUserToken("asdf");
-      },
-      signOut: () => {
-        setIsLoading(false);
-        setUserToken(null);
-      }
-    };
-  }, []);
-
   React.useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
@@ -116,10 +96,8 @@ export default () => {
   }
 
   return (
-    <AuthContext.Provider value={authContext}>
-      <NavigationContainer>
-        <RootStackScreen userToken={userToken} />
-      </NavigationContainer>
-    </AuthContext.Provider>
+    <NavigationContainer>
+      <HomeStackScreen />
+    </NavigationContainer>
   );
 };

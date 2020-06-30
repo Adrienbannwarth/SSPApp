@@ -6,7 +6,7 @@ import 'moment/locale/fr';
 
 import Header from "../Header";
 import HotelDetails from "../stack/HotelDetails"
-import utils from '../../app.utils'
+import utils from '../../utils/app.utils'
 import IconCalendar from "../../assets/icons/calendar.svg";
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 
@@ -21,16 +21,15 @@ export default function Home({ navigation }) {
     navigation.navigate("HotelDetails", { id: id });
   }
 
-  // useEffect(() => {
-  //   // fetch proposals list
-  //   console.log("will fetch porposal list")
-  //   utils.fetch('/proposals', {
-  //     method: "GET"
-  //   }).then(res => {
-  //     setList(res.data.list);
-  //   })
-  //     .catch(error => console.log(error))
-  // }, []);
+  useEffect(() => {
+
+    utils.fetchJson("/planning?day=2020-06-11", {})
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(error => console.log(error))
+
+  }, []);
 
   return (
     <View style={styles.container}>
