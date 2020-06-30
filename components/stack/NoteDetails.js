@@ -25,11 +25,16 @@ export default function NoteDetails({ navigation }) {
       setImage(result.uri);
     }
   };
+
+  const handleAreaResize = () => {
+    console.log('text changed')
+  }
+
   return (
     <View style={styles.container}>
         <Text style={styles.hotelTitle}>1ere class CONFLANS</Text>
         <ScrollView>
-        <Text style={styles.hotelTitle}>Ajouter une note</Text>
+        <Text style={styles.hotelTitle} onChange={console.log('hello')}>Ajouter une note</Text>
         <View style={styles.textInputContainer}>
         <TextInput style={styles.textInput} multiline={true} numberOfLines={6} value={text} placeholder="Votre note" onChangeText={text => setText(text)}/>
         </View>
