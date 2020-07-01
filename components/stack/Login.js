@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image, Button, TouchableOpacity, TextInput } fr
 import { AuthContext } from "../../context";
 import utils from '../../app.utils';
 import { NavigationEvents } from 'react-navigation';
+
 const ImgLogo = require("../../assets/img/ssdp_logo.png");
 
 export default function Login(navigation) {

@@ -20,7 +20,10 @@ export default function Notes({ navigation }) {
             headerShown: false,
           }}
         />
-        <Stack.Screen name="Details" component={NoteDetails} />
+        <Stack.Screen name="Details" 
+        options={{
+            tabBarVisible: false,
+          }} component={NoteDetails} />
       </Stack.Navigator>
     </NavigationContainer>
   );
