@@ -14,8 +14,8 @@ import Notes from "./components/tabs/Notes";
 //Stack
 import Login from "./components/stack/Login";
 import HotelDetails from "./components/stack/HotelDetails";
+import Problem from "./components/stack/Problem";
 
-const Tabs = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
 
 const HomeStackScreen = () => (
@@ -42,27 +42,19 @@ const HomeStackScreen = () => (
   </HomeStack.Navigator>
 );
 
-const TabsScreen = () => (
-  <Tabs.Navigator>
-    <Tabs.Screen name="Home" component={Home} />
-    <Tabs.Screen name="Notes" component={Notes} />
-    <Tabs.Screen name="Notifications" component={Notifications} />
-    <Tabs.Screen name="Contacts" component={Contacts} />
-  </Tabs.Navigator>
-);
 
 const Drawer = createDrawerNavigator();
 const DrawerScreen = () => (
   <Drawer.Navigator initialRouteName="Home">
-    <Drawer.Screen name="Accueil" component={TabsScreen} />
+    <Drawer.Screen name="Accueil" component={Home} />
     <Drawer.Screen name="Mes notes" component={Notes} />
+    <Drawer.Screen name="PROB" component={Problem} />
     <Drawer.Screen name="Déconnexion" component={Login} />
   </Drawer.Navigator>
 );
 
 export default () => {
   const [isLoading, setIsLoading] = React.useState(true);
-  const [userToken, setUserToken] = React.useState(null);
 
   React.useEffect(() => {
     setTimeout(() => {
