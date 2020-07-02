@@ -16,6 +16,9 @@ import {
   Input,
 } from "react-native-elements";
 import * as ImagePicker from "expo-image-picker";
+import NumericInput from 'react-native-numeric-input'
+
+import utils from '../../app.utils';
 
 import Header from "../Header";
 
@@ -26,6 +29,13 @@ export default function NoteDetails({ navigation }) {
   const [image1, setImage1] = useState(null);
   const [image2, setImage2] = useState(null);
   const [image3, setImage3] = useState(null);
+  const [value, setValue] = useState(30)
+ 
+  // const [rapportData, setRapportData] = useState({
+  //   commentaire,
+  //   note,
+  //   visit_id
+  // })
 
   const imageCarroussel = () => {
     // console.log(imageArray);
@@ -54,9 +64,16 @@ export default function NoteDetails({ navigation }) {
     }
   };
 
-  const handleAreaResize = () => {
-    console.log("text changed");
-  };
+  const handleSubmitRapport = () => {
+    var data = {commentaire: text, note: value, visit_id: 1}
+    console.log(value);
+    utils.fetchReadyData('/rapport/create', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json'}
+    })
+
+  } 
 
   return (
     <View style={styles.container}>
@@ -64,7 +81,7 @@ export default function NoteDetails({ navigation }) {
       <ScrollView style={styles.scrollV}>
         <View style={styles.section}>
           <Text style={styles.sectionTitle} onChange={console.log("hello")}>
-            Ajouter une note
+            Ajouter un commentaire
           </Text>
           <View style={styles.textInputContainer}>
             <TextInput
@@ -76,6 +93,13 @@ export default function NoteDetails({ navigation }) {
               onChangeText={(text) => setText(text)}
             />
           </View>
+        </View>
+
+        <View style={styles.section}>
+        <Text style={styles.sectionTitle} onChange={console.log("hello")}>
+            Selectionner une note
+          </Text>
+          <NumericInput maxValue={60} value={value} onChange={value => setValue({value})} />
         </View>
 
         <Text style={styles.sectionTitle}>Vos photos</Text>
@@ -97,7 +121,7 @@ export default function NoteDetails({ navigation }) {
         <TouchableOpacity style={styles.btnBack}>
           <Text style={styles.btnTextDark}>Retour</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.btnConfirm}>
+        <TouchableOpacity onPress={handleSubmitRapport} style={styles.btnConfirm}>
           <Text style={styles.btnText}>Sauvegarder</Text>
         </TouchableOpacity>
       </View>

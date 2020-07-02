@@ -5,17 +5,28 @@ import params from './app.params'
  * @param {string} url api route
  * @param {object} parameters request parameters (headers, body, etc...)
  */
-function fetchJson(url, parameters = {}) {
+async function fetchJson(url, parameters = {}) {
 
-  return fetch(process.env.REACT_APP_API_ENDPOINT + url, {
-    method: parameters.method || "GET",
-    headers: parameters.headers || {
-      "Content-Type": "application/json",
-      "x-access-token": localStorage.getItem(params.LOCAL_STORAGE_ACCESS_TOKEN) || ""
-    },
-    body: parameters.body
-  })
-    .then(res => res.json())
+  let token = await HelpersAsyncStorage.get(config.LOCAL_STORAGE_ACCESS_TOKEN)
+
+  console.log("token => ", token);
+
+  if (token) {
+    parameters.headers = parameters.headers || {}
+
+    return fetch(config.API_ENDPOINT + url, {
+      method: parameters.method || "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": token || "",
+        ...parameters.headers,
+      },
+      body: parameters.body
+    })
+      .then(res => res.json())
+  } else {
+    throw Error("pas bon")
+  }
 }
 
 /**
