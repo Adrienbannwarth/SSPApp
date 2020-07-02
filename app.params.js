@@ -1,12 +1,3 @@
-module.exports = {
+import config from './config';
 
-  LOCAL_STORAGE_ACCESS_TOKEN: "access_token",
-
-  WORDING: {
-    role: {
-      "visitor": "Visiteur",
-      "planner": "Administrateur"
-    }
-  }
-
-}
+console.log('config', config);

@@ -1,40 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, Button, TouchableOpacity, TextInput } from 'react-native';
-import { AuthContext } from "../../context";
-import utils from '../../app.utils';
-import { NavigationEvents } from 'react-navigation';
-
+import utils from '../../utils/app.utils';
 const ImgLogo = require("../../assets/img/ssdp_logo.png");
+//
+import HelpersAsyncStorage from "../../utils/HelpersAsyncStorage"
+import config from "../../config";
 
-export default function Login(navigation) {
-  const { signIn } = React.useContext(AuthContext);
-
+export default function Login({ navigation }) {
   /** States */
   const [stateEmail, setStateEmail] = useState(null)
   const [statePassword, setStatePassword] = useState(null)
 
   const submitLogin = () => {
 
-    // if (!stateEmail || !statePassword) {
-    //   // show you must enter email and password!
-    // } else {
-    //   utils.fetchForm("/auth/signin", {
-    //     "email": stateEmail,
-    //     "password": statePassword
-    //   }).then(response => {
-    //     if (response.error) {
-    //       // credentials or invalid
-    //     } else {
-    //       localStorage.setItem("access_token", response.data.token)
-    //       history.push('/')
-    //     }
-    //   })
-    //     .catch(error => {
-    //       console.error(error)
-    //     })
-    // }
+    if (!stateEmail || !statePassword) {
+      // show you must enter email and password!
+    } else {
+      utils.fetchForm("/auth/signin", {
 
-    // navigation.navigate('HomeScreenStack')
+        "email": stateEmail,
+        "password": statePassword
+      }).then(response => {
+        if (response.error) {
+          console.log(response.error);
+
+          // credentials or invalid
+        } else {
+          HelpersAsyncStorage.set(config.LOCAL_STORAGE_ACCESS_TOKEN, response.data.token)
+
+            .then(async () => {
+              console.log('--> ', await HelpersAsyncStorage.get(config.LOCAL_STORAGE_ACCESS_TOKEN));
+              navigation.navigate('Home');
+              // changement de page
+            })
+        }
+      })
+        .catch(error => {
+          console.error(error)
+        })
+    }
   }
 
   return (
@@ -55,6 +59,7 @@ export default function Login(navigation) {
           style={styles.input}
           onChangeText={statePassword => setStatePassword(statePassword)}
           placeholder="Mot de passe"
+          secureTextEntry={true}
           placeholderTextColor="white"
         ></TextInput>
         <TouchableOpacity

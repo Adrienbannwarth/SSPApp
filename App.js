@@ -5,8 +5,6 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { AuthContext } from "./context";
-
 //Tab
 import Home from "./components/tabs/Home";
 import Contacts from "./components/tabs/Contacts";
@@ -17,29 +15,29 @@ import Notes from "./components/tabs/Notes";
 import Login from "./components/stack/Login";
 import HotelDetails from "./components/stack/HotelDetails";
 
-const AuthStack = createStackNavigator();
-const AuthStackScreen = () => (
-  <AuthStack.Navigator>
-    <AuthStack.Screen
-      name="Login"
-      component={Login}
-      options={{ headerShown: false }}
-    />
-  </AuthStack.Navigator>
-);
-
 const Tabs = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
 
 const HomeStackScreen = () => (
-  <HomeStack.Navigator>
-    <HomeStack.Screen name="Home" component={Home} />
+  <HomeStack.Navigator
+    initialRouteName="Login"
+  >
     <HomeStack.Screen
-      name="Details"
-      component={Details}
+      name="Home"
+      component={DrawerScreen}
+      options={{ headerShown: false }} />
+    <HomeStack.Screen
+      name="HotelDetails"
+      component={HotelDetails}
       options={({ route }) => ({
-        title: route.params.name
+        title: route.params.name,
+        headerShown: false
       })}
+    />
+    <HomeStack.Screen
+      name="Login"
+      component={Login}
+      options={{ headerShown: false }}
     />
   </HomeStack.Navigator>
 );
@@ -55,55 +53,16 @@ const TabsScreen = () => (
 
 const Drawer = createDrawerNavigator();
 const DrawerScreen = () => (
-  <Drawer.Navigator initialRouteName="Profile">
-    <Drawer.Screen name="Home" component={TabsScreen} />
-    <Drawer.Screen name="HotelDetails" component={HotelDetails} />
+  <Drawer.Navigator initialRouteName="Home">
+    <Drawer.Screen name="Accueil" component={TabsScreen} />
+    <Drawer.Screen name="Mes notes" component={Notes} />
+    <Drawer.Screen name="Déconnexion" component={Login} />
   </Drawer.Navigator>
-);
-
-const RootStack = createStackNavigator();
-const RootStackScreen = ({ userToken }) => (
-  <RootStack.Navigator headerMode="none">
-    {userToken ? (
-      <RootStack.Screen
-        name="App"
-        component={DrawerScreen}
-        options={{
-          animationEnabled: false
-        }}
-      />
-    ) : (
-        <RootStack.Screen
-          name="Auth"
-          component={AuthStackScreen}
-          options={{
-            animationEnabled: false
-          }}
-        />
-      )}
-  </RootStack.Navigator>
 );
 
 export default () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [userToken, setUserToken] = React.useState(null);
-
-  const authContext = React.useMemo(() => {
-    return {
-      signIn: () => {
-        setIsLoading(false);
-        setUserToken("asdf");
-      },
-      signUp: () => {
-        setIsLoading(false);
-        setUserToken("asdf");
-      },
-      signOut: () => {
-        setIsLoading(false);
-        setUserToken(null);
-      }
-    };
-  }, []);
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -116,10 +75,8 @@ export default () => {
   }
 
   return (
-    <AuthContext.Provider value={authContext}>
-      <NavigationContainer>
-        <RootStackScreen userToken={userToken} />
-      </NavigationContainer>
-    </AuthContext.Provider>
+    <NavigationContainer>
+      <HomeStackScreen />
+    </NavigationContainer>
   );
 };

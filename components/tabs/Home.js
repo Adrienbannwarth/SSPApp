@@ -1,36 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, Button } from 'react-native';
+import { StyleSheet, Text, View, Image, Button, FlatList } from 'react-native';
 import DatePicker, { getFormatedDate } from 'react-native-modern-datepicker';
 import moment from 'moment';
 import 'moment/locale/fr';
 
 import Header from "../Header";
 import HotelDetails from "../stack/HotelDetails"
-import utils from '../../app.utils'
+import utils from '../../utils/app.utils'
 import IconCalendar from "../../assets/icons/calendar.svg";
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 
+import HelpersAsyncStorage from '../../utils/HelpersAsyncStorage';
+import config from '../../config';
+
 export default function Home({ navigation }) {
 
-  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedDate, setSelectedDate] = useState(new Date() || '');
   const [openDatePicker, setOpenDatePicker] = useState(false);
   const [list, setList] = useState([]);
 
   // Methods
-  const navigateToProposalDetails = id => {
-    navigation.navigate("HotelDetails", { id: id });
+  const navigateToProposalDetails = (id, nom, adresse, ville, priority, code_postal, start, end) => {
+    navigation.navigate("HotelDetails", {
+      id: id,
+      nom: nom,
+      adresse: adresse,
+      ville: ville,
+      priority: priority,
+      code_postal: code_postal,
+      start: start,
+      end: end
+    });
   }
 
-  // useEffect(() => {
-  //   // fetch proposals list
-  //   console.log("will fetch porposal list")
-  //   utils.fetch('/proposals', {
-  //     method: "GET"
-  //   }).then(res => {
-  //     setList(res.data.list);
-  //   })
-  //     .catch(error => console.log(error))
-  // }, []);
+  const nbPriority = list.filter(elem => elem.hotel.priority).length
+  const totalVisit = list.length
+
+  useEffect(() => {
+    utils.fetchJson("/planning?day=" + moment(selectedDate).format("YYYY-MM-DD"), {})
+      .then(res => {
+        setList(res.data.visites)
+        console.log(res.data.visites);
+      })
+      .catch(error => console.log(error))
+
+  }, [selectedDate]);
 
   return (
     <View style={styles.container}>
@@ -65,56 +79,60 @@ export default function Home({ navigation }) {
         <View style={styles.headerInfo}>
           <View style={styles.contentTag}>
             <View style={styles.tagInfo}>
-              <Text style={styles.textTag}>3</Text>
+              <Text style={styles.textTag}>{totalVisit}</Text>
             </View>
             <Text style={styles.textBold}>Visites à venir</Text>
           </View>
           <View style={styles.contentTag}>
             <View style={styles.tagWarning}>
-              <Text style={styles.textTag}>2</Text>
+              <Text style={styles.textTag}>{nbPriority}</Text>
             </View>
             <Text style={styles.textBold}>En urgences</Text>
           </View>
         </View>
 
         <ScrollView style={styles.contentVisit}>
-          <TouchableOpacity style={[styles.card, { borderColor: '#00528C' }]}>
-            <Text style={styles.hotelName}>1ère Classe Conflans</Text>
-            <Text style={styles.hotelAdress}>CONFLANS-SAINTE-HONORINE</Text>
-            <View style={styles.flexRow}>
-              <View>
-                <View style={[styles.contentVisitTag, { backgroundColor: '#00528C' }]}>
-                  <Text style={styles.visitTag}>Normal</Text>
-                </View>
-                <Text style={styles.textBold}>Jean Pierre P. - Adrianna K.</Text>
-              </View>
-              <View>
-                <Text style={styles.visitHour}>08:00</Text>
-                <Text style={styles.visitHour}>10:00</Text>
-              </View>
-            </View>
-            <View style={styles.containerNotes}>
-              <Text style={styles.textInfo}>Commentaire planif :</Text>
-              <Text style={styles.textDesc}>Verification des chambres de la partie nord de l’immeuble</Text>
-            </View>
-          </TouchableOpacity>
+          <FlatList
+            keyExtractor={item => item.id + ""}
+            style={styles.flatList}
+            data={list}
+            renderItem={
+              ({ item }) => (
+                <TouchableOpacity
+                  style={[styles.card, { borderColor: item.hotel.priority == false ? '#00528C' : '#EB5757' }]}
+                  onPress={() => navigateToProposalDetails(
+                    item.hotel.id,
+                    item.hotel.nom,
+                    item.hotel.adresse,
+                    item.hotel.ville,
+                    item.hotel.priority,
+                    item.hotel.code_postal,
+                    item.start,
+                    item.end
+                  )}>
+                  <Text style={styles.hotelName}>{item.hotel.nom}</Text>
+                  <Text style={styles.hotelAdress}>{item.hotel.adresse}</Text>
+                  <View style={styles.flexRow}>
+                    <View>
+                      <View style={[styles.contentVisitTag, { backgroundColor: item.hotel.priority == false ? '#00528C' : '#EB5757' }]}>
+                        <Text style={styles.visitTag}>{item.hotel.priority == false ? 'Normal' : 'Urgence'}</Text>
+                      </View>
+                      <Text style={styles.textBold}>{item.agents[0].nom} - {item.agents[1].nom}</Text>
+                    </View>
+                    <View>
+                      <Text style={styles.visitHour}>{moment(item.start).format("LT")}</Text>
+                      <Text style={styles.visitHour}>{moment(item.end).format("LT")}</Text>
+                    </View>
+                  </View>
+                  <View style={styles.containerNotes}>
+                    <Text style={styles.textInfo}>Commentaire planif :</Text>
+                    <Text style={styles.textDesc}>Verification des chambres de la partie nord de l’immeuble</Text>
+                  </View>
+                </TouchableOpacity>
+              )
+            }
+          />
 
-          <TouchableOpacity style={[styles.card, { borderColor: '#EB5757' }]}>
-            <Text style={styles.hotelName}>1ère Classe Conflans</Text>
-            <Text style={styles.hotelAdress}>CONFLANS-SAINTE-HONORINE</Text>
-            <View style={styles.flexRow}>
-              <View>
-                <View style={[styles.contentVisitTag, { backgroundColor: '#EB5757' }]}>
-                  <Text style={styles.visitTag}>urgence</Text>
-                </View>
-                <Text style={styles.textBold}>Jean Pierre P. - Adrianna K.</Text>
-              </View>
-              <View>
-                <Text style={styles.visitHour}>08:00</Text>
-                <Text style={styles.visitHour}>10:00</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
         </ScrollView>
       </View>
     </View>
@@ -126,6 +144,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   flexRow: {
+    width: '85%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 10,
@@ -220,7 +239,8 @@ const styles = StyleSheet.create({
   card: {
     padding: 20,
     marginBottom: 15,
-    width: '100%',
+    marginLeft: 10,
+    width: '95%',
     borderWidth: 2,
     borderRadius: 5
   },
@@ -232,7 +252,7 @@ const styles = StyleSheet.create({
     fontSize: 15
   },
   visitHour: {
-    fontSize: 25,
+    fontSize: 24,
     fontWeight: 'bold'
   },
   contentVisitTag: {

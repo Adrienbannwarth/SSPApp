@@ -1,81 +1,149 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, Button } from 'react-native';
+import { StyleSheet, Text, View, Image, Button, Platform } from 'react-native';
 import call from 'react-native-phone-call';
 import openMap from 'react-native-open-maps';
 import Header from "../Header";
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { withTheme } from 'react-native-elements';
-// Images
+import moment from 'moment';
+import 'moment/locale/fr';
+import * as Linking from 'expo-linking';
 
 import IconPhone from "../../assets/icons/phone.svg";
 import IconLocalisation from "../../assets/icons/localisation.svg";
+import IconMap from "../../assets/icons/map.svg";
+import IconClock from "../../assets/icons/clock.svg";
+import IconInfo from "../../assets/icons/info.svg";
+import IconBack from "../../assets/icons/back.svg"
 
 
-export default function HotelDetails({ navigation }) {
+export default function HotelDetails({ route, navigation }) {
 
+  const { adresse, code_postal, ville, nom, priority, start, end } = route.params;
+  const [openBeginVisit, setBeginVisit] = useState(false);
+
+  // // handler to make a call
+  // const args = {
+  //   number: '06450',
+  //   prompt: false,
+  // };
+  // call(args).catch(console.error);
   const call = () => {
-    // handler to make a call
-    const args = {
-      number: '06450',
-      prompt: false,
-    };
-    call(args).catch(console.error);
+    let phoneNumber = '';
+
+    if (Platform.OS === 'android') {
+      phoneNumber = 'tel:${1234567890}';
+    }
+    else {
+      phoneNumber = 'telprompt:${1234567890}';
+    }
+    Linking.openURL(phoneNumber);
   };
 
-  const _goToYosemite = () => {
-    openMap({ latitude: 37.865101, longitude: -119.538330 });
-  }
+const _goToYosemite = () => {
+  openMap({ latitude: 37.865101, longitude: -119.538330 });
+}
 
-  return (
-    <View style={styles.container}>
-      <Header navigation={navigation} />
-      <View style={styles.content}>
-        <View style={styles.contentTag}>
-          <Text style={styles.tag}>Urgence</Text>
+return (
+  <View style={styles.container}>
+    <Header navigation={navigation} />
+    <View style={styles.contentHeader}>
+      <View style={styles.btn_back}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}>
+          <IconBack
+            style={styles.icon_back}
+            color={'white'}
+            width={25}
+            height={25} />
+        </TouchableOpacity>
+      </View>
+      <Image
+        style={styles.bg}
+        source={require("../../assets/img/bg-hotel.jpg")}
+      ></Image>
+    </View>
+    <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: -20 }}>
+      <TouchableOpacity onPress={() => call()} style={styles.contentIcon}>
+        <IconPhone
+          color={'white'}
+          width={22}
+          height={22} />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => _goToYosemite()} style={styles.contentIcon}>
+        <IconMap
+          color={'white'}
+          width={22}
+          height={22} />
+      </TouchableOpacity>
+    </View>
+    <View style={styles.content}>
+      <View style={styles.row}>
+        <View style={[styles.contentTag, { backgroundColor: priority == false ? '#00528C' : '#EB5757' }]}>
+          <Text style={styles.tag}>
+            {priority == false ? 'normal' : 'urgence'}</Text>
         </View>
-        <Text style={styles.titleHotel}>1er classe conflans - ESPRERER</Text>
-        <View style={styles.border}></View>
-        <Text style={styles.adressName}>11 rue des belles hates, 78700 conflans sainte honorine</Text>
-        <View style={styles.flexRow}>
-          <View style={styles.contentIcon}>
-            <IconPhone
-              color={'white'}
-              width={25}
-              height={25}
-              strokeWidth={1} />
+        {openBeginVisit && (
+          <View style={[styles.contentTag, { backgroundColor: 'rgba(0, 107, 180, 0.25)' }]}>
+            <Text style={styles.tag}>En cours</Text>
           </View>
-          <TouchableOpacity onPress={call}>
-            <Text>06 78 23 56 78</Text>
-          </TouchableOpacity>
+        )}
+      </View>
+      <Text style={styles.titleHotel}>{nom}</Text>
+      <View style={styles.hr}></View>
+      <View style={styles.spaceBtween}>
+        <View style={styles.row}>
+          <IconClock
+            style={styles.icon}
+            color={'black'}
+            width={22}
+            height={22} />
+          <Text>Horaire de visite</Text>
         </View>
-        <View style={styles.flexRow}>
-          <View style={styles.contentIcon}>
-            <IconLocalisation
-              color={'white'}
-              width={25}
-              height={25}
-              strokeWidth={1} />
-          </View>
-          {/* onPress={_goToYosemite()} */}
-          <TouchableOpacity>
-            <Text>Localisation</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.commentContent}>
-          <Text style={styles.commentTitle}>Commentaire de votre plannificateur</Text>
-          <Text style={styles.commentText}>Verif de schambres de la partie dnord de l'immeuble</Text>
-        </View>
-        <View style={styles.sectionBtn}>
-          <TouchableOpacity style={styles.btn}>
-            <Text style={styles.btnText}>Commencer la visite</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text style={styles.helpText}>J'ai un problème</Text>
-          </TouchableOpacity>
+        <Text style={styles.hours}>{moment(start).format("LT")} - {moment(end).format("LT")}</Text>
+      </View>
+      <View style={styles.hr}></View>
+      <View style={styles.row}>
+        <IconLocalisation
+          style={styles.icon}
+          color={'black'}
+          width={22}
+          height={22} />
+        <View>
+          <Text>{adresse}, {code_postal}</Text>
+          <Text>- {ville}</Text>
         </View>
       </View>
+      <View style={styles.hr}></View>
+
+      <View style={styles.commentContent}>
+        <View style={styles.row}>
+          <IconInfo
+            style={styles.icon}
+            color={'black'}
+            width={22}
+            height={22} />
+          <Text style={styles.commentTitle}>Recommandations de votre planificateur</Text>
+        </View>
+        <Text style={styles.commentText}>Verif de schambres de la partie dnord de l'immeuble</Text>
+      </View>
+      <View style={styles.sectionBtn}>
+        {!openBeginVisit && (
+          <TouchableOpacity onPress={() => setBeginVisit(!openBeginVisit)} style={styles.btn}>
+            <Text style={styles.btnText}>Commencer la visite</Text>
+          </TouchableOpacity>
+        )}
+        {openBeginVisit && (
+          <TouchableOpacity style={styles.btn}>
+            <Text style={styles.btnText}>Ajouter des notes</Text>
+          </TouchableOpacity>
+        )}
+        <TouchableOpacity>
+          <Text style={styles.helpText}>J'ai un problème</Text>
+        </TouchableOpacity>
+      </View>
     </View>
-  );
+  </View>
+);
 }
 
 const styles = StyleSheet.create({
@@ -83,72 +151,81 @@ const styles = StyleSheet.create({
     flex: 1
   },
   content: {
+    position: "relative",
     flex: 6,
     marginLeft: 25,
     marginTop: 10
+  },
+  contentHeader: {
+    position: 'relative'
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: "center"
   },
   flexRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 20
   },
+  spaceBtween: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
   contentTag: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 105,
+    width: 100,
     height: 35,
     marginTop: 10,
+    marginRight: 5,
     marginBottom: 15,
-    borderRadius: 5,
-    backgroundColor: '#EB5757'
+    borderRadius: 5
   },
   tag: {
     color: 'white',
     textTransform: 'uppercase',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    fontSize: 13
   },
   titleHotel: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold'
   },
-  border: {
+  hr: {
     marginTop: 20,
     marginBottom: 20,
-    width: 70,
-    height: 3,
-    backgroundColor: '#00528C'
+    width: '92%',
+    height: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.1)'
   },
   adressName: {
     fontSize: 16
   },
   contentIcon: {
-    width: 40,
-    height: 40,
-    marginRight: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    marginRight: 20,
+    width: 40,
+    height: 40,
     backgroundColor: '#00528C',
     borderRadius: 8
   },
-  commentContent: {
-    marginTop: 20,
-    paddingTop: 10,
-    borderTopWidth: 1,
-    borderTopColor: 'grey'
-  },
+
   commentTitle: {
-    fontSize: 18,
-    marginBottom: 15,
+    fontSize: 15,
     fontWeight: 'bold'
   },
   commentText: {
+    marginTop: 20,
     fontSize: 15
   },
   sectionBtn: {
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    marginBottom: 50
+    marginBottom: 30
   },
   btn: {
     marginTop: 20,
@@ -166,5 +243,29 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginRight: 25,
     textAlign: 'center'
+  },
+  icon: {
+    marginRight: 10
+  },
+  hours: {
+    marginRight: 30,
+    color: '#00528C',
+    fontWeight: 'bold'
+  },
+  btn_back: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
+    zIndex: 100,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 40,
+    height: 40,
+    backgroundColor: "rgba(0, 0, 0, .8)",
+    borderRadius: 5
+  },
+  icon_back: {
+    marginRight: 2,
   }
 });
