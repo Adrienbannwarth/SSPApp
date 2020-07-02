@@ -18,7 +18,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import NumericInput from 'react-native-numeric-input'
 
-import utils from '../../app.utils';
+import utils from '../../utils/app.utils';
 
 import Header from "../Header";
 
