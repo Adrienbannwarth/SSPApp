@@ -23,8 +23,17 @@ import { ScrollView } from "react-native-gesture-handler";
 
 export default function NoteDetails({ navigation }) {
   const [text, setText] = useState("");
-  const [imageArray, setImageArray] = useState(null);
+  const [image1, setImage1] = useState(null);
+  const [image2, setImage2] = useState(null);
+  const [image3, setImage3] = useState(null);
 
+  const imageCarroussel = () => {
+    // console.log(imageArray);
+    // imageArray.map(i => {
+    //   return <Image source={{ uri: imageArray[i].uri }} style={styles.thumbnail}></Image>
+
+    // })
+  }
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -34,7 +43,14 @@ export default function NoteDetails({ navigation }) {
     });
 
     if (!result.cancelled) {
-      setImageArray(result);
+      if(image1 == null){
+        setImage1(result);
+        console.log(image1)
+      } else if (image2 == null) {
+        setImage2(result)
+      } else {
+        setImage3(result)
+      }
     }
   };
 
@@ -72,11 +88,9 @@ export default function NoteDetails({ navigation }) {
             style={styles.thumbnail}
           />            
           })} */}
-        {imageArray !== null ? (
-          <View style={styles.container}>
-            <Image source={{ uri: imageArray.uri }} style={styles.thumbnail} />
-          </View>
-        ) : null}
+        {image1 !== null ? <Image source={{ uri: image1.uri }} style={styles.thumbnail}></Image> : null}
+        {image2 !== null ? <Image source={{ uri: image2.uri }}></Image>  : null}
+        {image3 !== null ? <Image source={{ uri: image3.uri }}></Image>  : null}
       </ScrollView>
 
       <View style={styles.actionBtn}>
@@ -118,7 +132,7 @@ const styles = StyleSheet.create({
     flex: 6,
   },
   scrollV: {
-    marginBottom: "30",
+    marginBottom: "30%",
   },
   textInput: { height: 40, borderColor: "gray", borderWidth: 1, flex: 5 },
   btn: {
@@ -136,8 +150,8 @@ const styles = StyleSheet.create({
     alignItems: "stretch",
   },
   thumbnail: {
-    width: 300,
-    height: 300,
+    width: 150,
+    height: 150,
     resizeMode: "contain",
   },
   btnConfirm: {
