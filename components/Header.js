@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   btnDrawer: {
     position: 'absolute',
     left: 20,
-    top: 62,
+    top: 55,
     zIndex: 2
   }
 });

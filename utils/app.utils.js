@@ -10,14 +10,14 @@ import config from "../config";
  */
 async function fetchJson(url, parameters = {}) {
 
-  let token = await HelpersAsyncStorage.get(process.env.LOCAL_STORAGE_ACCESS_TOKEN)
+  let token = await HelpersAsyncStorage.get(config.LOCAL_STORAGE_ACCESS_TOKEN)
 
   console.log("token => ", token);
 
   if (token) {
     parameters.headers = parameters.headers || {}
 
-    return fetch(process.env.REACT_APP_API_ENDPOINT + url, {
+    return fetch(config.API_ENDPOINT + url, {
       method: parameters.method || "GET",
       headers: {
         "Content-Type": "application/json",

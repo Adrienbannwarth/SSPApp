@@ -59,6 +59,7 @@ export default function Login({ navigation }) {
           style={styles.input}
           onChangeText={statePassword => setStatePassword(statePassword)}
           placeholder="Mot de passe"
+          secureTextEntry={true}
           placeholderTextColor="white"
         ></TextInput>
         <TouchableOpacity

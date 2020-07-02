@@ -24,15 +24,16 @@ const HomeStackScreen = () => (
   >
     <HomeStack.Screen
       name="Home"
-      component={TabsScreen}
+      component={DrawerScreen}
       options={{ headerShown: false }} />
-    {/* <HomeStack.Screen
-      name="Details"
-      component={Details}
+    <HomeStack.Screen
+      name="HotelDetails"
+      component={HotelDetails}
       options={({ route }) => ({
-        title: route.params.name
+        title: route.params.name,
+        headerShown: false
       })}
-    /> */}
+    />
     <HomeStack.Screen
       name="Login"
       component={Login}
@@ -52,33 +53,11 @@ const TabsScreen = () => (
 
 const Drawer = createDrawerNavigator();
 const DrawerScreen = () => (
-  <Drawer.Navigator initialRouteName="Profile">
-    <Drawer.Screen name="Home" component={TabsScreen} />
-    <Drawer.Screen name="HotelDetails" component={HotelDetails} />
+  <Drawer.Navigator initialRouteName="Home">
+    <Drawer.Screen name="Accueil" component={TabsScreen} />
+    <Drawer.Screen name="Mes notes" component={Notes} />
+    <Drawer.Screen name="Déconnexion" component={Login} />
   </Drawer.Navigator>
-);
-
-const RootStack = createStackNavigator();
-const RootStackScreen = ({ userToken }) => (
-  <RootStack.Navigator headerMode="none">
-    {userToken ? (
-      <RootStack.Screen
-        name="App"
-        component={DrawerScreen}
-        options={{
-          animationEnabled: false
-        }}
-      />
-    ) : (
-        <RootStack.Screen
-          name="Login"
-          component={Login}
-          options={{
-            animationEnabled: false
-          }}
-        />
-      )}
-  </RootStack.Navigator>
 );
 
 export default () => {
