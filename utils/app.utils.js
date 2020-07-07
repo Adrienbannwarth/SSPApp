@@ -41,6 +41,9 @@ async function fetchJson(url, parameters = {}) {
 
 function fetchForm(url, data = {}) {
   console.log(config);
+  console.log(config.API_ENDPOINT);
+  console.log(url);
+  console.log(data);
 
   const urlencoded = new URLSearchParams()
 

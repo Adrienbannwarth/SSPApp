@@ -64,7 +64,7 @@ export default function Login({ navigation }) {
         ></TextInput>
         <TouchableOpacity
           style={styles.btn}
-          onPress={() => signIn()}>
+          onPress={() => submitLogin()}>
           <Text style={styles.btnText}> Se connecter</Text>
         </TouchableOpacity>
       </View>

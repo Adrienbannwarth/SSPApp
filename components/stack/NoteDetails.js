@@ -18,7 +18,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import NumericInput from 'react-native-numeric-input'
 
-import utils from '../../app.utils';
+import utils from '../../utils/app.utils';
 
 import Header from "../Header";
 
@@ -66,7 +66,7 @@ export default function NoteDetails({ navigation }) {
 
   const handleSubmitRapport = () => {
     var data = {commentaire: text, note: value, visit_id: 1}
-    console.log(value);
+    console.log(data);
     utils.fetchReadyData('/rapport/create', {
       method: 'PUT',
       body: JSON.stringify(data),
