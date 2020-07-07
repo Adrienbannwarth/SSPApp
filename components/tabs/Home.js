@@ -20,8 +20,9 @@ export default function Home({ navigation }) {
   const [list, setList] = useState([]);
 
   // Methods
-  const navigateToProposalDetails = (id, nom, adresse, ville, priority, code_postal, start, end) => {
+  const navigateToProposalDetails = (id_visit, id, nom, adresse, ville, priority, code_postal, start, end) => {
     navigation.navigate("HotelDetails", {
+      id_visit: id_visit,
       id: id,
       nom: nom,
       adresse: adresse,
@@ -37,10 +38,10 @@ export default function Home({ navigation }) {
   const totalVisit = list.length
 
   useEffect(() => {
-    utils.fetchJson("/planning?day=" + moment(selectedDate).format("YYYY-MM-DD"), {})
+    utils.fetchJson("/visite?day=" + moment(selectedDate).format("YYYY-MM-DD"), {})
       .then(res => {
-        setList(res.data.visites)
-        console.log(res.data.visites);
+        setList(res.data)
+        console.log(res.data);
       })
       .catch(error => console.log(error))
 
@@ -101,6 +102,7 @@ export default function Home({ navigation }) {
                 <TouchableOpacity
                   style={[styles.card, { borderColor: item.hotel.priority == false ? '#00528C' : '#EB5757' }]}
                   onPress={() => navigateToProposalDetails(
+                    item.id,
                     item.hotel.id,
                     item.hotel.nom,
                     item.hotel.adresse,

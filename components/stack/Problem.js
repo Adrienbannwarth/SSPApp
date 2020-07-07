@@ -1,30 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
+import utils from '../../utils/app.utils';
 
 import Header from "../Header";
 
-export default function Problem({ navigation }) {
 
-  const [value, setValue] = useState('');
-  const [text, setText] = useState('');
+import IconValid from "../../assets/icons/check-circle.svg";
+
+let items = [
+  { label: 'Problème de santé', value: 'santé' },
+  { label: 'Problème de transport', value: 'transport' },
+  { label: 'Véhicule indisponible', value: 'vehicule' },
+]
+
+export default function Problem({ route, navigation }) {
+
+  const { id_visit } = route.params;
+
+  const [motif, setMotif] = useState(items[0].label)
+  const [comment, setComment] = useState('')
+  const [warningForm, setWarningForm] = useState('')
+
+  const submitProblem = () => {
+    const recap = JSON.stringify({
+      "motif": motif,
+      "visit_id": id_visit,
+      "commentaire": comment
+    })
+
+    utils.fetchJson("/signalement/create", {
+      method: "PUT",
+      body: recap
+    })
+      .then(res => {
+        console.log(res);
+        setWarningForm('WARNING_1')
+        setTimeout(() => {
+          navigation.navigate("Home")
+        }, 1500);
+      })
+      .catch(error => console.log(error))
+  }
 
   function changeItem(item) {
-    setValue(item.value);
+    setMotif(item.label);
   }
 
   return (
-
     <View style={styles.container}>
       <Header navigation={navigation} />
       <View style={styles.content}>
         <Text style={styles.title}>Signaler un problème</Text>
         <DropDownPicker
-          items={[
-            { label: 'Problème de santé', value: 'santé' },
-            { label: 'Problème de transport', value: 'transport' },
-            { label: 'Véhicule indisponible', value: 'vehicule' },
-          ]}
+          items={items}
           defaultIndex={0}
           placeholder={'Veuillez choisir un motif*'}
           style={styles.dropdown}
@@ -36,18 +65,29 @@ export default function Problem({ navigation }) {
             style={styles.textInput}
             multiline={true}
             numberOfLines={6}
-            value={text}
+            value={comment}
             placeholder="Ajouter un commentaire (facultatif)"
-            onChangeText={(text) => setText(text)}
+            onChangeText={(comment) => setComment(comment)}
           />
         </View>
         <Text style={styles.textInfo}>* Champs obligatoire</Text>
       </View>
+      {warningForm == "WARNING_1" && <View style={styles.bg_black}>
+        <View style={styles.contentWarning}>
+          <View style={styles.contentIcon}>
+            <IconValid
+              color={'white'}
+              width={22}
+              height={22} />
+          </View>
+          <Text style={styles.warning}>Votre signalement a été envoyé</Text>
+        </View>
+      </View>}
       <View style={styles.actionBtn}>
-        <TouchableOpacity style={styles.btnBack}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.btnBack}>
           <Text style={styles.btnTextDark}>Annuler</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.btnConfirm}>
+        <TouchableOpacity onPress={() => submitProblem()} style={styles.btnConfirm}>
           <Text style={styles.btnText}>Envoyer</Text>
         </TouchableOpacity>
       </View>
@@ -57,7 +97,6 @@ export default function Problem({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 30,
     flex: 1
   },
   content: {
@@ -104,6 +143,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-around",
+    marginBottom: 30,
   },
   btnText: {
     color: 'white'
@@ -111,5 +151,34 @@ const styles = StyleSheet.create({
   textInfo: {
     marginTop: 30,
     color: 'grey'
+  },
+  contentWarning: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 180,
+    height: 180,
+    backgroundColor: 'white',
+    borderRadius: 5
+  },
+  contentIcon: {
+    marginBottom: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 50,
+    height: 50,
+    borderRadius: 40,
+    backgroundColor: '#87D37C'
+  },
+  warning: {
+    textAlign: 'center'
+  },
+  bg_black: {
+    zIndex: 3,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, .8)'
   }
 });

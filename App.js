@@ -35,6 +35,14 @@ const HomeStackScreen = () => (
       })}
     />
     <HomeStack.Screen
+      name="Problem"
+      component={Problem}
+      options={({ route }) => ({
+        title: route.params.name,
+        headerShown: false
+      })}
+    />
+    <HomeStack.Screen
       name="Login"
       component={Login}
       options={{ headerShown: false }}
@@ -48,7 +56,6 @@ const DrawerScreen = () => (
   <Drawer.Navigator initialRouteName="Home">
     <Drawer.Screen name="Accueil" component={Home} />
     <Drawer.Screen name="Mes notes" component={Notes} />
-    <Drawer.Screen name="PROB" component={Problem} />
     <Drawer.Screen name="Déconnexion" component={Login} />
   </Drawer.Navigator>
 );
