@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, Button, Platform } from 'react-native';
 import call from 'react-native-phone-call';
 import openMap from 'react-native-open-maps';
-import Header from "../Header";
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import moment from 'moment';
 import 'moment/locale/fr';
@@ -15,7 +14,8 @@ import IconLocalisation from "../../assets/icons/localisation.svg";
 import IconMap from "../../assets/icons/map.svg";
 import IconClock from "../../assets/icons/clock.svg";
 import IconInfo from "../../assets/icons/info.svg";
-import IconBack from "../../assets/icons/back.svg"
+import IconBack from "../../assets/icons/back.svg";
+import IconHelp from "../../assets/icons/help-circle.svg"
 
 
 export default function HotelDetails({ route, navigation }) {
@@ -25,7 +25,7 @@ export default function HotelDetails({ route, navigation }) {
 
   const navigateToProblems = (id_visit) => {
     console.log(id_visit);
-    
+
     navigation.navigate("Problem", {
       id_visit: id_visit
     });
@@ -49,7 +49,14 @@ export default function HotelDetails({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      <Header navigation={navigation} />
+      <TouchableOpacity style={styles.header} onPress={() => navigateToProblems(id_visit)}>
+        <Text style={styles.helpText}>J'ai un problème</Text>
+        <IconHelp
+          marginRight={20}
+          color={'white'}
+          width={20}
+          height={20} />
+      </TouchableOpacity>
       <View style={styles.contentHeader}>
         <View style={styles.btn_back}>
           <TouchableOpacity
@@ -130,21 +137,18 @@ export default function HotelDetails({ route, navigation }) {
           </View>
           <Text style={styles.commentText}>Verif de schambres de la partie dnord de l'immeuble</Text>
         </View>
-        <View style={styles.sectionBtn}>
-          {!openBeginVisit && (
-            <TouchableOpacity onPress={() => setBeginVisit(!openBeginVisit)} style={styles.btn}>
-              <Text style={styles.btnText}>Commencer la visite</Text>
-            </TouchableOpacity>
-          )}
-          {openBeginVisit && (
-            <TouchableOpacity style={styles.btn}>
-              <Text style={styles.btnText}>Ajouter des notes</Text>
-            </TouchableOpacity>
-          )}
-          <TouchableOpacity onPress={() => navigateToProblems(id_visit)}>
-            <Text style={styles.helpText}>J'ai un problème</Text>
+      </View>
+      <View style={styles.sectionBtn}>
+        {!openBeginVisit && (
+          <TouchableOpacity onPress={() => setBeginVisit(!openBeginVisit)} style={styles.btn}>
+            <Text style={styles.btnText}>Commencer la visite</Text>
           </TouchableOpacity>
-        </View>
+        )}
+        {openBeginVisit && (
+          <TouchableOpacity style={styles.btn}>
+            <Text style={styles.btnText}>Ajouter des notes</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -227,26 +231,29 @@ const styles = StyleSheet.create({
   },
   sectionBtn: {
     position: 'absolute',
+    backgroundColor: '#00528C',
     bottom: 0,
     width: '100%',
-    marginBottom: 30
+    borderRadius: 20
   },
   btn: {
     marginTop: 20,
+    marginBottom: 20,
+    marginRight: 25,
+    marginLeft: 25,
     justifyContent: 'center',
     alignItems: 'center',
     height: 40,
     borderRadius: 5,
-    width: '90%',
-    backgroundColor: '#00528C',
+    backgroundColor: 'white',
+    borderRadius: 50
   },
   btnText: {
-    color: 'white',
+    color: '#00528C',
   },
   helpText: {
-    marginTop: 20,
-    marginRight: 25,
-    textAlign: 'center'
+    color: 'white',
+    marginRight: 10
   },
   icon: {
     marginRight: 10
@@ -271,5 +278,18 @@ const styles = StyleSheet.create({
   },
   icon_back: {
     marginRight: 2,
+  },
+  header: {
+    position: 'relative',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    width: '100%',
+    height: 100,
+    paddingTop: 30,
+    backgroundColor: '#00528C'
+  },
+  logo: {
+    width: '50%'
   }
 });

@@ -38,6 +38,9 @@ export default function Home({ navigation }) {
   const nbIsCancelled = list.filter(elem => elem.is_canceled == true).length
   const totalVisit = (list.length - nbIsCancelled)
 
+  const sort = list.sort((a, b) => Date.parse(a.start) - Date.parse(b.start))
+
+
   useEffect(() => {
 
     const url = "/visite?mine=1&day=" + moment(selectedDate).format("YYYY-MM-DD")
