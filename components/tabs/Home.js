@@ -35,10 +35,16 @@ export default function Home({ navigation }) {
   }
 
   const nbPriority = list.filter(elem => elem.hotel.priority).length
-  const totalVisit = list.length
+  const nbIsCancelled = list.filter(elem => elem.is_canceled == true).length
+  const totalVisit = (list.length - nbIsCancelled)
 
   useEffect(() => {
-    utils.fetchJson("/visite?day=" + moment(selectedDate).format("YYYY-MM-DD"), {})
+
+    const url = "/visite?mine=1&day=" + moment(selectedDate).format("YYYY-MM-DD")
+
+    console.log("url", url);
+
+    utils.fetchJson(url, {})
       .then(res => {
         setList(res.data)
         console.log(res.data);
@@ -100,7 +106,10 @@ export default function Home({ navigation }) {
             renderItem={
               ({ item }) => (
                 <TouchableOpacity
-                  style={[styles.card, { borderColor: item.hotel.priority == false ? '#00528C' : '#EB5757' }]}
+                  style={[styles.card, {
+                    borderColor: item.hotel.priority == false ? '#00528C' : '#EB5757',
+                    backgroundColor: item.is_canceled == '' ? 1 : 'rgba(0, 0, 0, .3)'
+                  }]}
                   onPress={() => navigateToProposalDetails(
                     item.id,
                     item.hotel.id,

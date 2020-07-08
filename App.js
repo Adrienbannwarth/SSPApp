@@ -1,14 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 
 //Tab
 import Home from "./components/tabs/Home";
-import Contacts from "./components/tabs/Contacts";
-import Notifications from "./components/tabs/Notifications";
 import Notes from "./components/tabs/Notes";
 
 //Stack
