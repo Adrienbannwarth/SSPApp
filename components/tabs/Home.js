@@ -20,8 +20,9 @@ export default function Home({ navigation }) {
   const [list, setList] = useState([]);
 
   // Methods
-  const navigateToProposalDetails = (id, nom, adresse, ville, priority, code_postal, start, end) => {
+  const navigateToProposalDetails = (id_visit, id, nom, adresse, ville, priority, code_postal, start, end) => {
     navigation.navigate("HotelDetails", {
+      id_visit: id_visit,
       id: id,
       nom: nom,
       adresse: adresse,
@@ -34,13 +35,19 @@ export default function Home({ navigation }) {
   }
 
   const nbPriority = list.filter(elem => elem.hotel.priority).length
-  const totalVisit = list.length
+  const nbIsCancelled = list.filter(elem => elem.is_canceled == true).length
+  const totalVisit = (list.length - nbIsCancelled)
 
   useEffect(() => {
-    utils.fetchJson("/planning?day=" + moment(selectedDate).format("YYYY-MM-DD"), {})
+
+    const url = "/visite?mine=1&day=" + moment(selectedDate).format("YYYY-MM-DD")
+
+    console.log("url", url);
+
+    utils.fetchJson(url, {})
       .then(res => {
-        setList(res.data.visites)
-        console.log(res.data.visites);
+        setList(res.data)
+        console.log(res.data);
       })
       .catch(error => console.log(error))
 
@@ -99,8 +106,12 @@ export default function Home({ navigation }) {
             renderItem={
               ({ item }) => (
                 <TouchableOpacity
-                  style={[styles.card, { borderColor: item.hotel.priority == false ? '#00528C' : '#EB5757' }]}
+                  style={[styles.card, {
+                    borderColor: item.hotel.priority == false ? '#00528C' : '#EB5757',
+                    backgroundColor: item.is_canceled == '' ? 1 : 'rgba(0, 0, 0, .3)'
+                  }]}
                   onPress={() => navigateToProposalDetails(
+                    item.id,
                     item.hotel.id,
                     item.hotel.nom,
                     item.hotel.adresse,

@@ -28,14 +28,13 @@ export default function Header({ navigation }) {
 
 const styles = StyleSheet.create({
   header: {
-    flex: 1,
     position: 'relative',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
     height: 100,
-    paddingTop: 20,
+    paddingTop: 30,
     backgroundColor: '#00528C'
   },
   logo: {

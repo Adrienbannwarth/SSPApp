@@ -8,6 +8,8 @@ import moment from 'moment';
 import 'moment/locale/fr';
 import * as Linking from 'expo-linking';
 
+import Problem from '../stack/Problem'
+
 import IconPhone from "../../assets/icons/phone.svg";
 import IconLocalisation from "../../assets/icons/localisation.svg";
 import IconMap from "../../assets/icons/map.svg";
@@ -18,15 +20,17 @@ import IconBack from "../../assets/icons/back.svg"
 
 export default function HotelDetails({ route, navigation }) {
 
-  const { adresse, code_postal, ville, nom, priority, start, end } = route.params;
+  const { id_visit, adresse, code_postal, ville, nom, priority, start, end } = route.params;
   const [openBeginVisit, setBeginVisit] = useState(false);
 
-  // // handler to make a call
-  // const args = {
-  //   number: '06450',
-  //   prompt: false,
-  // };
-  // call(args).catch(console.error);
+  const navigateToProblems = (id_visit) => {
+    console.log(id_visit);
+    
+    navigation.navigate("Problem", {
+      id_visit: id_visit
+    });
+  }
+
   const call = () => {
     let phoneNumber = '';
 
@@ -39,111 +43,111 @@ export default function HotelDetails({ route, navigation }) {
     Linking.openURL(phoneNumber);
   };
 
-const _goToYosemite = () => {
-  openMap({ latitude: 37.865101, longitude: -119.538330 });
-}
+  const _goToYosemite = () => {
+    openMap({ latitude: 37.865101, longitude: -119.538330 });
+  }
 
-return (
-  <View style={styles.container}>
-    <Header navigation={navigation} />
-    <View style={styles.contentHeader}>
-      <View style={styles.btn_back}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}>
-          <IconBack
-            style={styles.icon_back}
+  return (
+    <View style={styles.container}>
+      <Header navigation={navigation} />
+      <View style={styles.contentHeader}>
+        <View style={styles.btn_back}>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}>
+            <IconBack
+              style={styles.icon_back}
+              color={'white'}
+              width={25}
+              height={25} />
+          </TouchableOpacity>
+        </View>
+        <Image
+          style={styles.bg}
+          source={require("../../assets/img/bg-hotel.jpg")}
+        ></Image>
+      </View>
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: -20 }}>
+        <TouchableOpacity onPress={() => call()} style={styles.contentIcon}>
+          <IconPhone
             color={'white'}
-            width={25}
-            height={25} />
+            width={22}
+            height={22} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => _goToYosemite()} style={styles.contentIcon}>
+          <IconMap
+            color={'white'}
+            width={22}
+            height={22} />
         </TouchableOpacity>
       </View>
-      <Image
-        style={styles.bg}
-        source={require("../../assets/img/bg-hotel.jpg")}
-      ></Image>
-    </View>
-    <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: -20 }}>
-      <TouchableOpacity onPress={() => call()} style={styles.contentIcon}>
-        <IconPhone
-          color={'white'}
-          width={22}
-          height={22} />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => _goToYosemite()} style={styles.contentIcon}>
-        <IconMap
-          color={'white'}
-          width={22}
-          height={22} />
-      </TouchableOpacity>
-    </View>
-    <View style={styles.content}>
-      <View style={styles.row}>
-        <View style={[styles.contentTag, { backgroundColor: priority == false ? '#00528C' : '#EB5757' }]}>
-          <Text style={styles.tag}>
-            {priority == false ? 'normal' : 'urgence'}</Text>
-        </View>
-        {openBeginVisit && (
-          <View style={[styles.contentTag, { backgroundColor: 'rgba(0, 107, 180, 0.25)' }]}>
-            <Text style={styles.tag}>En cours</Text>
+      <View style={styles.content}>
+        <View style={styles.row}>
+          <View style={[styles.contentTag, { backgroundColor: priority == false ? '#00528C' : '#EB5757' }]}>
+            <Text style={styles.tag}>
+              {priority == false ? 'normal' : 'urgence'}</Text>
           </View>
-        )}
-      </View>
-      <Text style={styles.titleHotel}>{nom}</Text>
-      <View style={styles.hr}></View>
-      <View style={styles.spaceBtween}>
+          {openBeginVisit && (
+            <View style={[styles.contentTag, { backgroundColor: 'rgba(0, 107, 180, 0.25)' }]}>
+              <Text style={styles.tag}>En cours</Text>
+            </View>
+          )}
+        </View>
+        <Text style={styles.titleHotel}>{nom}</Text>
+        <View style={styles.hr}></View>
+        <View style={styles.spaceBtween}>
+          <View style={styles.row}>
+            <IconClock
+              style={styles.icon}
+              color={'black'}
+              width={22}
+              height={22} />
+            <Text>Horaire de visite</Text>
+          </View>
+          <Text style={styles.hours}>{moment(start).format("LT")} - {moment(end).format("LT")}</Text>
+        </View>
+        <View style={styles.hr}></View>
         <View style={styles.row}>
-          <IconClock
+          <IconLocalisation
             style={styles.icon}
             color={'black'}
             width={22}
             height={22} />
-          <Text>Horaire de visite</Text>
+          <View>
+            <Text>{adresse}, {code_postal}</Text>
+            <Text>- {ville}</Text>
+          </View>
         </View>
-        <Text style={styles.hours}>{moment(start).format("LT")} - {moment(end).format("LT")}</Text>
-      </View>
-      <View style={styles.hr}></View>
-      <View style={styles.row}>
-        <IconLocalisation
-          style={styles.icon}
-          color={'black'}
-          width={22}
-          height={22} />
-        <View>
-          <Text>{adresse}, {code_postal}</Text>
-          <Text>- {ville}</Text>
-        </View>
-      </View>
-      <View style={styles.hr}></View>
+        <View style={styles.hr}></View>
 
-      <View style={styles.commentContent}>
-        <View style={styles.row}>
-          <IconInfo
-            style={styles.icon}
-            color={'black'}
-            width={22}
-            height={22} />
-          <Text style={styles.commentTitle}>Recommandations de votre planificateur</Text>
+        <View style={styles.commentContent}>
+          <View style={styles.row}>
+            <IconInfo
+              style={styles.icon}
+              color={'black'}
+              width={22}
+              height={22} />
+            <Text style={styles.commentTitle}>Recommandations de votre planificateur</Text>
+          </View>
+          <Text style={styles.commentText}>Verif de schambres de la partie dnord de l'immeuble</Text>
         </View>
-        <Text style={styles.commentText}>Verif de schambres de la partie dnord de l'immeuble</Text>
-      </View>
-      <View style={styles.sectionBtn}>
-        {!openBeginVisit && (
-          <TouchableOpacity onPress={() => setBeginVisit(!openBeginVisit)} style={styles.btn}>
-            <Text style={styles.btnText}>Commencer la visite</Text>
+        <View style={styles.sectionBtn}>
+          {!openBeginVisit && (
+            <TouchableOpacity onPress={() => setBeginVisit(!openBeginVisit)} style={styles.btn}>
+              <Text style={styles.btnText}>Commencer la visite</Text>
+            </TouchableOpacity>
+          )}
+          {openBeginVisit && (
+            <TouchableOpacity style={styles.btn}>
+              <Text style={styles.btnText}>Ajouter des notes</Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity onPress={() => navigateToProblems(id_visit)}>
+            <Text style={styles.helpText}>J'ai un problème</Text>
           </TouchableOpacity>
-        )}
-        {openBeginVisit && (
-          <TouchableOpacity style={styles.btn}>
-            <Text style={styles.btnText}>Ajouter des notes</Text>
-          </TouchableOpacity>
-        )}
-        <TouchableOpacity>
-          <Text style={styles.helpText}>J'ai un problème</Text>
-        </TouchableOpacity>
+        </View>
       </View>
     </View>
-  </View>
-);
+  );
 }
 
 const styles = StyleSheet.create({

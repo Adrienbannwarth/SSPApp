@@ -10,11 +10,20 @@ export default function Login({ navigation }) {
   /** States */
   const [stateEmail, setStateEmail] = useState(null)
   const [statePassword, setStatePassword] = useState(null)
+  const [errorForm, setErrorForm] = useState('')
 
   const submitLogin = () => {
 
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+    if (reg.test(stateEmail) === false) {
+      setErrorForm('ERROR_1')
+      return false;
+    }
+
     if (!stateEmail || !statePassword) {
       // show you must enter email and password!
+      setErrorForm('ERROR_2')
     } else {
       utils.fetchForm("/auth/signin", {
 
@@ -22,6 +31,7 @@ export default function Login({ navigation }) {
         "password": statePassword
       }).then(response => {
         if (response.error) {
+          setErrorForm('ERROR_3')
           console.log(response.error);
 
           // credentials or invalid
@@ -62,6 +72,9 @@ export default function Login({ navigation }) {
           secureTextEntry={true}
           placeholderTextColor="white"
         ></TextInput>
+        {errorForm == "ERROR_1" && <Text style={styles.warning}>Adresse Email Invalide</Text>}
+        {errorForm == "ERROR_2" && <Text style={styles.warning}>Renseigner tous les  champs</Text>}
+        {errorForm == "ERROR_3" && <Text style={styles.warning}>Identifiant incorrect</Text>}
         <TouchableOpacity
           style={styles.btn}
           onPress={() => submitLogin()}>
@@ -104,5 +117,9 @@ const styles = StyleSheet.create({
   btnText: {
     color: '#00528C',
     fontWeight: 'bold'
+  },
+  warning: {
+    color: 'white',
+    padding: 10
   }
-});
+}); 
