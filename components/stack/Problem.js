@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, KeyboardAvoidingView } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import utils from '../../utils/app.utils';
 
@@ -53,7 +53,10 @@ export default function Problem({ route, navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS == "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
       <Header navigation={navigation} />
       <View style={styles.content}>
         <Text style={styles.title}>Signaler un problème</Text>
@@ -114,7 +117,7 @@ export default function Problem({ route, navigation }) {
           <Text style={styles.btnText}>Envoyer</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -162,7 +165,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 5,
     width: "45%",
-    backgroundColor: "transparent",
+    backgroundColor: "white",
   },
   actionBtn: {
     display: "flex",

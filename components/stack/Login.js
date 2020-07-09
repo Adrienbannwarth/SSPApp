@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, Button, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Image, Button, TouchableOpacity, TextInput, KeyboardAvoidingView } from 'react-native';
 import utils from '../../utils/app.utils';
 const ImgLogo = require("../../assets/img/ssdp_logo.png");
 //
@@ -52,7 +52,10 @@ export default function Login({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS == "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
       <Image
         style={styles.logo}
         source={ImgLogo}
@@ -72,16 +75,16 @@ export default function Login({ navigation }) {
           secureTextEntry={true}
           placeholderTextColor="white"
         ></TextInput>
-        {errorForm == "ERROR_1" && <Text style={styles.warning}>Adresse Email Invalide</Text>}
-        {errorForm == "ERROR_2" && <Text style={styles.warning}>Renseigner tous les  champs</Text>}
-        {errorForm == "ERROR_3" && <Text style={styles.warning}>Identifiant incorrect</Text>}
+        {errorForm == "ERROR_1" && <Text style={styles.warning}>Adresse Email Invalide  </Text>}
+        {errorForm == "ERROR_2" && <Text style={styles.warning}>Renseigner tous les  champs  </Text>}
+        {errorForm == "ERROR_3" && <Text style={styles.warning}>Identifiant incorrect  </Text>}
         <TouchableOpacity
           style={styles.btn}
           onPress={() => submitLogin()}>
-          <Text style={styles.btnText}> Se connecter</Text>
+          <Text style={styles.btnText}> Se connecter </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 

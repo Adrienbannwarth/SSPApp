@@ -153,8 +153,8 @@ export default function Home(props) {
                       <Text style={styles.textBold}>{item.agents[0].nom} - {item.agents[1].nom}</Text>
                     </View>
                     <View>
-                      <Text style={styles.visitHour}>{moment(item.start).format("LT")}</Text>
-                      <Text style={styles.visitHour}>{moment(item.end).format("LT")}</Text>
+                      <Text style={styles.visitHour}>{moment(item.start).format("LT")} </Text>
+                      <Text style={styles.visitHour}>{moment(item.end).format("LT")} </Text>
                     </View>
                   </View>
                   <View style={styles.containerNotes}>

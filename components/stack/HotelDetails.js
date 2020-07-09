@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, Button, Platform } from 'react-native';
+import { StyleSheet, Text, View, Image, Platform, ScrollView } from 'react-native';
 import call from 'react-native-phone-call';
 import openMap from 'react-native-open-maps';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -96,7 +96,7 @@ export default function HotelDetails({ route, navigation }) {
             height={22} />
         </TouchableOpacity>
       </View>
-      <View style={styles.content}>
+      <ScrollView style={styles.content}>
         <View style={styles.row}>
           <View style={[styles.contentTag, { backgroundColor: priority == false ? '#00528C' : '#EB5757' }]}>
             <Text style={styles.tag}>
@@ -146,7 +146,7 @@ export default function HotelDetails({ route, navigation }) {
           </View>
           <Text style={styles.commentText}>Verif de schambres de la partie dnord de l'immeuble</Text>
         </View>
-      </View>
+      </ScrollView>
       <View style={styles.sectionBtn}>
         {!openBeginVisit && (
           <TouchableOpacity onPress={() => setBeginVisit(!openBeginVisit)} style={styles.btn}>
