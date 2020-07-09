@@ -17,19 +17,23 @@ import {
 } from "react-native-elements";
 import * as ImagePicker from "expo-image-picker";
 import NumericInput from 'react-native-numeric-input'
+import { Camera } from 'expo-camera'
+
 
 import utils from '../../utils/app.utils';
 
 import Header from "../Header";
 
 import { ScrollView } from "react-native-gesture-handler";
+import { NavigationEvents } from "react-navigation";
 
-export default function NoteDetails({ navigation }) {
+export default function NoteDetails({ route, navigation }) {
   const [text, setText] = useState("");
   const [image1, setImage1] = useState(null);
   const [image2, setImage2] = useState(null);
   const [image3, setImage3] = useState(null);
   const [value, setValue] = useState(30)
+  const { id_visit, nom } = route.params;
  
   // const [rapportData, setRapportData] = useState({
   //   commentaire,
@@ -65,19 +69,46 @@ export default function NoteDetails({ navigation }) {
   };
 
   const handleSubmitRapport = () => {
-    var data = {commentaire: text, note: value, visit_id: 1}
-    console.log(value);
+    var data = {commentaire: text, note: value, visit_id: id_visit}
+    console.log(data);
     utils.fetchReadyData('/rapport/create', {
       method: 'PUT',
       body: JSON.stringify(data),
       headers: { 'Content-Type': 'application/json'}
+    }).then(function(){
+      console.log('ok')
+      navigation.navigate('Home')
+    }).catch(function(){
+      console.log('pas ok')
     })
 
   } 
+  const [hasPermission, setHasPermission] = useState(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
+
+  useEffect(() => {
+
+    (async () => {
+      const { status } = await Camera.requestPermissionsAsync();
+      setHasPermission(status === 'granted');
+    })();
+  }, []);
+
+  useEffect(() => {
+    console.log(id_visit)
+    console.log(nom)
+  }, [])
+
+  if (hasPermission === null) {
+    return <View />;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.hotelTitle}>1ere class CONFLANS</Text>
+      <Text style={styles.hotelTitle}>{nom}</Text>
       <ScrollView style={styles.scrollV}>
         <View style={styles.section}>
           <Text style={styles.sectionTitle} onChange={console.log("hello")}>
@@ -102,23 +133,11 @@ export default function NoteDetails({ navigation }) {
           <NumericInput maxValue={60} value={value} onChange={value => setValue({value})} />
         </View>
 
-        <Text style={styles.sectionTitle}>Vos photos</Text>
-        <TouchableOpacity style={styles.btn} onPress={pickImage}>
-          <Text style={styles.btnText}>Ajouter des photos</Text>
-        </TouchableOpacity>
-        {/* {imageArray.map(image => {
-            <Image
-            source={{ uri: image.uri }}
-            style={styles.thumbnail}
-          />            
-          })} */}
-        {image1 !== null ? <Image source={{ uri: image1.uri }} style={styles.thumbnail}></Image> : null}
-        {image2 !== null ? <Image source={{ uri: image2.uri }}></Image>  : null}
-        {image3 !== null ? <Image source={{ uri: image3.uri }}></Image>  : null}
+
       </ScrollView>
 
       <View style={styles.actionBtn}>
-        <TouchableOpacity style={styles.btnBack}>
+        <TouchableOpacity style={styles.btnBack} onPress={() => navigation.goBack()}>
           <Text style={styles.btnTextDark}>Retour</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleSubmitRapport} style={styles.btnConfirm}>

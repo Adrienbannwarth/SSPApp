@@ -11,6 +11,7 @@ import Notes from "./components/tabs/Notes";
 import Login from "./components/stack/Login";
 import HotelDetails from "./components/stack/HotelDetails";
 import Problem from "./components/stack/Problem";
+import NoteDetails from "./components/stack/NoteDetails";
 
 console.disableYellowBox = true;
 
@@ -41,6 +42,14 @@ const HomeStackScreen = () => (
       })}
     />
     <HomeStack.Screen
+      name="Rapport"
+      component={NoteDetails}
+      options={({ route }) => ({
+        title: route.params.name,
+        headerShown: false
+      })}
+    />
+    <HomeStack.Screen
       name="Login"
       component={Login}
       options={{ headerShown: false }}
@@ -53,7 +62,7 @@ const Drawer = createDrawerNavigator();
 const DrawerScreen = () => (
   <Drawer.Navigator initialRouteName="Home">
     <Drawer.Screen name="Accueil" component={Home} />
-    <Drawer.Screen name="Mes notes" component={Notes} />
+    {/* <Drawer.Screen name="Mes notes" component={Notes} /> */}
     <Drawer.Screen name="Déconnexion" component={Login} />
   </Drawer.Navigator>
 );
