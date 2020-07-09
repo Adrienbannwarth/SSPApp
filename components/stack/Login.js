@@ -14,12 +14,12 @@ export default function Login({ navigation }) {
 
   const submitLogin = () => {
 
-    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    // let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-    if (reg.test(stateEmail) === false) {
-      setErrorForm('ERROR_1')
-      return false;
-    }
+    // if (reg.test(stateEmail) === false) {
+    //   setErrorForm('ERROR_1')
+    //   return false;
+    // }
 
     if (!stateEmail || !statePassword) {
       // show you must enter email and password!
