@@ -12,6 +12,8 @@ import Login from "./components/stack/Login";
 import HotelDetails from "./components/stack/HotelDetails";
 import Problem from "./components/stack/Problem";
 
+console.disableYellowBox = true;
+
 const HomeStack = createStackNavigator();
 
 const HomeStackScreen = () => (

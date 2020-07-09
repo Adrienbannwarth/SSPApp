@@ -7,6 +7,7 @@ import Header from "../Header";
 
 
 import IconValid from "../../assets/icons/check-circle.svg";
+import IconWarning from "../../assets/icons/alert-triangle.svg";
 
 let items = [
   { label: 'Problème de santé', value: 'santé' },
@@ -20,7 +21,8 @@ export default function Problem({ route, navigation }) {
 
   const [motif, setMotif] = useState(items[0].label)
   const [comment, setComment] = useState('')
-  const [warningForm, setWarningForm] = useState('')
+  const [warningForm, setWarningForm] = useState(false)
+  const [validForm, setValidForm] = useState(false)
 
   const submitProblem = () => {
     const recap = JSON.stringify({
@@ -29,15 +31,18 @@ export default function Problem({ route, navigation }) {
       "commentaire": comment
     })
 
+    setValidForm(!validForm)
+
     utils.fetchJson("/signalement/create", {
       method: "PUT",
       body: recap
     })
       .then(res => {
         console.log(res);
-        setWarningForm('WARNING_1')
         setTimeout(() => {
-          navigation.navigate("Home")
+          navigation.navigate("Home", {
+            cancel: id_visit
+          })
         }, 1500);
       })
       .catch(error => console.log(error))
@@ -72,28 +77,48 @@ export default function Problem({ route, navigation }) {
         </View>
         <Text style={styles.textInfo}>* Champs obligatoire</Text>
       </View>
-      {warningForm == "WARNING_1" && <View style={styles.bg_black}>
+      {warningForm && <View style={styles.bg_black}>
         <View style={styles.contentWarning}>
-          <View style={styles.contentIcon}>
-            <IconValid
+          <View style={styles.contentIconWarning}>
+            <IconWarning
               color={'white'}
               width={22}
               height={22} />
           </View>
-          <Text style={styles.warning}>Votre signalement a été envoyé</Text>
+          <Text style={styles.warning}>Êtes-vous sûr de confirmer le signalement ?</Text>
+          <TouchableOpacity onPress={() => submitProblem()} style={styles.btnConfirm}>
+            <Text style={styles.btnText}>Envoyer</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setWarningForm(!warningForm)} style={styles.btnAnnul}>
+            <Text style={{ marginTop: 20 }}>Annuler</Text>
+          </TouchableOpacity>
         </View>
       </View>}
+      {validForm &&
+        <View style={styles.bg_black}>
+          <View style={styles.contentWarning}>
+            <View style={styles.contentIcon}>
+              <IconValid
+                color={'white'}
+                width={22}
+                height={22} />
+            </View>
+            <Text style={styles.warning}>Votre signalement a été envoyé</Text>
+          </View>
+        </View>}
       <View style={styles.actionBtn}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.btnBack}>
           <Text style={styles.btnTextDark}>Annuler</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => submitProblem()} style={styles.btnConfirm}>
+        <TouchableOpacity onPress={() => setWarningForm(!warningForm)} style={styles.btnConfirm}>
           <Text style={styles.btnText}>Envoyer</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 }
+
+// onPress={() => submitProblem()}
 
 const styles = StyleSheet.create({
   container: {
@@ -155,8 +180,8 @@ const styles = StyleSheet.create({
   contentWarning: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 180,
-    height: 180,
+    width: 250,
+    height: 250,
     backgroundColor: 'white',
     borderRadius: 5
   },
@@ -168,6 +193,15 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 40,
     backgroundColor: '#87D37C'
+  },
+  contentIconWarning: {
+    marginBottom: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 50,
+    height: 50,
+    borderRadius: 40,
+    backgroundColor: '#FFB946'
   },
   warning: {
     textAlign: 'center'

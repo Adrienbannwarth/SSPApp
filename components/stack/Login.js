@@ -119,7 +119,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   warning: {
-    color: 'white',
-    padding: 10
+    color: '#EB5757',
+    fontWeight: 'bold',
+    padding: 10,
+    marginBottom: 10
   }
 }); 

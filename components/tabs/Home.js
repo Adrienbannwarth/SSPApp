@@ -1,19 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, Button, FlatList } from 'react-native';
+import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import DatePicker, { getFormatedDate } from 'react-native-modern-datepicker';
 import moment from 'moment';
-import 'moment/locale/fr';
+moment.updateLocale("fr", {
+  firstDayOfWeek: 1
+})
 
 import Header from "../Header";
-import HotelDetails from "../stack/HotelDetails"
 import utils from '../../utils/app.utils'
+
 import IconCalendar from "../../assets/icons/calendar.svg";
-import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
+import IconPrev from "../../assets/icons/back.svg";
+import IconNext from "../../assets/icons/next.svg";
+
 
 import HelpersAsyncStorage from '../../utils/HelpersAsyncStorage';
 import config from '../../config';
 
-export default function Home({ navigation }) {
+export default function Home(props) {
 
   const [selectedDate, setSelectedDate] = useState(new Date() || '');
   const [openDatePicker, setOpenDatePicker] = useState(false);
@@ -21,7 +26,7 @@ export default function Home({ navigation }) {
 
   // Methods
   const navigateToProposalDetails = (id_visit, id, nom, adresse, ville, priority, code_postal, start, end) => {
-    navigation.navigate("HotelDetails", {
+    props.navigation.navigate("HotelDetails", {
       id_visit: id_visit,
       id: id,
       nom: nom,
@@ -40,30 +45,47 @@ export default function Home({ navigation }) {
 
   const sort = list.sort((a, b) => Date.parse(a.start) - Date.parse(b.start))
 
-
   useEffect(() => {
 
     const url = "/visite?mine=1&day=" + moment(selectedDate).format("YYYY-MM-DD")
 
-    console.log("url", url);
-
     utils.fetchJson(url, {})
       .then(res => {
         setList(res.data)
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch(error => console.log(error))
 
   }, [selectedDate]);
 
+  useEffect(() => {
+    const unsubscribe = props.navigation.addListener('focus', () => {
+      console.log("OUIIIIIIII");
+    });
+    return unsubscribe
+  }, [props.navigation])
+
   return (
+
     <View style={styles.container}>
-      <Header navigation={navigation} />
+      <Header navigation={props.navigation} />
       <View style={styles.content}>
 
         <View style={styles.headerNav}>
           <View style={styles.contentDate}>
+            <TouchableOpacity onPress={() => setSelectedDate(moment(selectedDate).subtract(1, 'days').format("YYYY-MM-DD"))}>
+              <IconPrev
+                color={'black'}
+                width={25}
+                height={25} />
+            </TouchableOpacity>
             <Text style={styles.date}>{moment(selectedDate).format("dddd DD MMM YYYY")}</Text>
+            <TouchableOpacity onPress={() => setSelectedDate(moment(selectedDate).add(1, 'days').format("YYYY-MM-DD"))}>
+              <IconNext
+                color={'black'}
+                width={25}
+                height={25} />
+            </TouchableOpacity>
           </View>
           <TouchableOpacity onPress={() => setOpenDatePicker(!openDatePicker)}>
             <View style={styles.contentIconDatepicker}>
@@ -83,6 +105,7 @@ export default function Home({ navigation }) {
             }}
             mode="calendar"
             onSelectedChange={date => setSelectedDate(date)}
+            onDateChange={date => setSelectedDate(date)}
           />
         )}
 
@@ -91,13 +114,13 @@ export default function Home({ navigation }) {
             <View style={styles.tagInfo}>
               <Text style={styles.textTag}>{totalVisit}</Text>
             </View>
-            <Text style={styles.textBold}>Visites à venir</Text>
+            <Text style={styles.textBold}>{totalVisit > 1 ? 'Visites à venir' : 'Visite à venir'}</Text>
           </View>
           <View style={styles.contentTag}>
             <View style={styles.tagWarning}>
               <Text style={styles.textTag}>{nbPriority}</Text>
             </View>
-            <Text style={styles.textBold}>En urgences</Text>
+            <Text style={styles.textBold}>{nbPriority > 1 ? 'En urgences' : 'En urgence'}</Text>
           </View>
         </View>
 
@@ -149,7 +172,7 @@ export default function Home({ navigation }) {
 
         </ScrollView>
       </View>
-    </View>
+    </View >
   );
 }
 
@@ -170,6 +193,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   contentDate: {
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     width: 200,
@@ -188,7 +212,8 @@ const styles = StyleSheet.create({
   },
   date: {
     color: '#00528C',
-    fontSize: 16,
+    fontWeight: 'normal',
+    fontSize: 15,
     textTransform: 'capitalize'
   },
   datePicker: {

@@ -145,9 +145,14 @@ export default function HotelDetails({ route, navigation }) {
           </TouchableOpacity>
         )}
         {openBeginVisit && (
-          <TouchableOpacity style={styles.btn}>
-            <Text style={styles.btnText}>Ajouter des notes</Text>
-          </TouchableOpacity>
+          <View>
+            <TouchableOpacity style={styles.btn}>
+              <Text style={styles.btnText}>Ajouter des notes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.btnFinish}>
+              <Text style={{ textAlign: 'center' }}>Terminer la visite</Text>
+            </TouchableOpacity>
+          </View>
         )}
       </View>
     </View>
@@ -230,10 +235,7 @@ const styles = StyleSheet.create({
     fontSize: 15
   },
   sectionBtn: {
-    position: 'absolute',
     backgroundColor: '#00528C',
-    bottom: 0,
-    width: '100%',
     borderRadius: 20
   },
   btn: {
@@ -275,6 +277,9 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: "rgba(0, 0, 0, .8)",
     borderRadius: 5
+  },
+  btnFinish: {
+    marginBottom: 25
   },
   icon_back: {
     marginRight: 2,
