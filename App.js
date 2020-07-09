@@ -11,6 +11,7 @@ import Notes from "./components/tabs/Notes";
 import Login from "./components/stack/Login";
 import HotelDetails from "./components/stack/HotelDetails";
 import Problem from "./components/stack/Problem";
+import NoteDetails from "./components/stack/NoteDetails";
 
 const HomeStack = createStackNavigator();
 
@@ -33,6 +34,14 @@ const HomeStackScreen = () => (
     <HomeStack.Screen
       name="Problem"
       component={Problem}
+      options={({ route }) => ({
+        title: route.params.name,
+        headerShown: false
+      })}
+    />
+    <HomeStack.Screen
+      name="Rapport"
+      component={NoteDetails}
       options={({ route }) => ({
         title: route.params.name,
         headerShown: false

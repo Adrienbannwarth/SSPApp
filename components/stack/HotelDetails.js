@@ -8,8 +8,6 @@ import moment from 'moment';
 import 'moment/locale/fr';
 import * as Linking from 'expo-linking';
 
-import Problem from '../stack/Problem'
-
 import IconPhone from "../../assets/icons/phone.svg";
 import IconLocalisation from "../../assets/icons/localisation.svg";
 import IconMap from "../../assets/icons/map.svg";
@@ -30,6 +28,17 @@ export default function HotelDetails({ route, navigation }) {
       id_visit: id_visit
     });
   }
+
+  const navigateToRapport = (id_visit, nom) => {
+    console.log(id_visit);
+    console.log(nom);
+    
+    navigation.navigate("Rapport", {
+      id_visit: id_visit,
+      nom: nom
+    });
+  }
+
 
   const call = () => {
     let phoneNumber = '';
@@ -137,7 +146,7 @@ export default function HotelDetails({ route, navigation }) {
             </TouchableOpacity>
           )}
           {openBeginVisit && (
-            <TouchableOpacity style={styles.btn}>
+            <TouchableOpacity style={styles.btn} onPress={() => navigateToRapport(id_visit, nom)}>
               <Text style={styles.btnText}>Ajouter des notes</Text>
             </TouchableOpacity>
           )}
