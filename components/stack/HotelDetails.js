@@ -32,7 +32,7 @@ export default function HotelDetails({ route, navigation }) {
   const navigateToRapport = (id_visit, nom) => {
     console.log(id_visit);
     console.log(nom);
-    
+
     navigation.navigate("Rapport", {
       id_visit: id_visit,
       nom: nom
@@ -146,23 +146,20 @@ export default function HotelDetails({ route, navigation }) {
           </View>
           <Text style={styles.commentText}>Verif de schambres de la partie dnord de l'immeuble</Text>
         </View>
-        <View style={styles.sectionBtn}>
-          {!openBeginVisit && (
-            <TouchableOpacity onPress={() => setBeginVisit(!openBeginVisit)} style={styles.btn}>
-              <Text style={styles.btnText}>Commencer la visite</Text>
-            </TouchableOpacity>
-          )}
-          {openBeginVisit && (
-            <View>
+      </View>
+      <View style={styles.sectionBtn}>
+        {!openBeginVisit && (
+          <TouchableOpacity onPress={() => setBeginVisit(!openBeginVisit)} style={styles.btn}>
+            <Text style={styles.btnText}>Commencer la visite</Text>
+          </TouchableOpacity>
+        )}
+        {openBeginVisit && (
+          <View>
             <TouchableOpacity style={styles.btn} onPress={() => navigateToRapport(id_visit, nom)}>
               <Text style={styles.btnText}>Ajouter des notes</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.btnFinish}>
-              <Text style={{ textAlign: 'center' }}>Terminer la visite</Text>
-            </TouchableOpacity>
-            </View>
-            )}
-      </View>
+          </View>
+        )}
       </View>
     </View>
   );

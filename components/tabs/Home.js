@@ -14,10 +14,6 @@ import IconCalendar from "../../assets/icons/calendar.svg";
 import IconPrev from "../../assets/icons/back.svg";
 import IconNext from "../../assets/icons/next.svg";
 
-
-import HelpersAsyncStorage from '../../utils/HelpersAsyncStorage';
-import config from '../../config';
-
 export default function Home(props) {
 
   const [selectedDate, setSelectedDate] = useState(new Date() || '');
@@ -46,7 +42,6 @@ export default function Home(props) {
   const sort = list.sort((a, b) => Date.parse(a.start) - Date.parse(b.start))
 
   useEffect(() => {
-
     const url = "/visite?mine=1&day=" + moment(selectedDate).format("YYYY-MM-DD")
 
     utils.fetchJson(url, {})
@@ -59,10 +54,11 @@ export default function Home(props) {
   }, [selectedDate]);
 
   useEffect(() => {
-    const unsubscribe = props.navigation.addListener('focus', () => {
-      console.log("OUIIIIIIII");
+    const reload = props.navigation.addListener('focus', () => {
+      // relaod page
+
     });
-    return unsubscribe
+    return reload
   }, [props.navigation])
 
   return (
@@ -123,7 +119,6 @@ export default function Home(props) {
             <Text style={styles.textBold}>{nbPriority > 1 ? 'En urgences' : 'En urgence'}</Text>
           </View>
         </View>
-
         <ScrollView style={styles.contentVisit}>
           <FlatList
             keyExtractor={item => item.id + ""}
@@ -136,6 +131,7 @@ export default function Home(props) {
                     borderColor: item.hotel.priority == false ? '#00528C' : '#EB5757',
                     backgroundColor: item.is_canceled == '' ? 1 : 'rgba(0, 0, 0, .3)'
                   }]}
+                  disabled={item.is_canceled == '' ? false : true}
                   onPress={() => navigateToProposalDetails(
                     item.id,
                     item.hotel.id,
@@ -169,10 +165,9 @@ export default function Home(props) {
               )
             }
           />
-
         </ScrollView>
       </View>
-    </View >
+    </View>
   );
 }
 
