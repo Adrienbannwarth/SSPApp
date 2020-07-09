@@ -137,7 +137,7 @@ export default function NoteDetails({ route, navigation }) {
       </ScrollView>
 
       <View style={styles.actionBtn}>
-        <TouchableOpacity style={styles.btnBack}>
+        <TouchableOpacity style={styles.btnBack} onPress={() => navigation.goBack()}>
           <Text style={styles.btnTextDark}>Retour</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleSubmitRapport} style={styles.btnConfirm}>

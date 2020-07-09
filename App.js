@@ -60,7 +60,7 @@ const Drawer = createDrawerNavigator();
 const DrawerScreen = () => (
   <Drawer.Navigator initialRouteName="Home">
     <Drawer.Screen name="Accueil" component={Home} />
-    <Drawer.Screen name="Mes notes" component={Notes} />
+    {/* <Drawer.Screen name="Mes notes" component={Notes} /> */}
     <Drawer.Screen name="Déconnexion" component={Login} />
   </Drawer.Navigator>
 );
