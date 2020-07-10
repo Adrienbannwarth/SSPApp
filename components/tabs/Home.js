@@ -19,7 +19,7 @@ export default function Home(props) {
   const [selectedDate, setSelectedDate] = useState(new Date() || '');
   const [openDatePicker, setOpenDatePicker] = useState(false);
   const [list, setList] = useState([]);
-  const [forceSelectedDate, setForceSelectedDate] = useState(false)
+  const [forceSelectedDate, setForceSelectedDate] = useState(1)
 
   // Methods
   const navigateToProposalDetails = (id_visit, id, nom, adresse, ville, priority, code_postal, start, end) => {
@@ -43,12 +43,14 @@ export default function Home(props) {
   const sort = list.sort((a, b) => Date.parse(a.start) - Date.parse(b.start))
 
   useEffect(() => {
+    console.log("START", forceSelectedDate);
     const url = "/visite?mine=1&day=" + moment(selectedDate).format("YYYY-MM-DD")
     console.log(selectedDate);
     utils.fetchJson(url, {})
       .then(res => {
+        setList([])
         setList(res.data)
-        // console.log(res.data);
+        console.log(res.data);
       })
       .catch(error => console.log(error))
 
@@ -57,7 +59,8 @@ export default function Home(props) {
   useEffect(() => {
     const reload = props.navigation.addListener('focus', () => {
       // relaod page
-      setForceSelectedDate(!forceSelectedDate)
+      console.log("endddd", forceSelectedDate);
+      setForceSelectedDate(Date.now())
     });
     return reload
   }, [props.navigation])
@@ -130,7 +133,7 @@ export default function Home(props) {
                 <TouchableOpacity
                   style={[styles.card, {
                     borderColor: item.hotel.priority == false ? '#00528C' : '#EB5757',
-                    backgroundColor: item.is_canceled == '' ? 1 : 'rgba(0, 0, 0, .3)'
+                    backgroundColor: (item.is_canceled === true || item.rapport) ? 'rgba(0, 0, 0, .3)' : ''
                   }]}
                   disabled={item.is_canceled == '' ? false : true}
                   onPress={() => navigateToProposalDetails(

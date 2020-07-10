@@ -35,7 +35,7 @@ export default function NoteDetails({ route, navigation }) {
   const [image3, setImage3] = useState(null);
   const [value, setValue] = useState(30)
   const { id_visit, nom } = route.params;
- 
+
   // const [rapportData, setRapportData] = useState({
   //   commentaire,
   //   note,
@@ -58,7 +58,7 @@ export default function NoteDetails({ route, navigation }) {
     });
 
     if (!result.cancelled) {
-      if(image1 == null){
+      if (image1 == null) {
         setImage1(result);
         console.log(image1)
       } else if (image2 == null) {
@@ -70,20 +70,22 @@ export default function NoteDetails({ route, navigation }) {
   };
 
   const handleSubmitRapport = () => {
-    var data = {commentaire: text, note: value, visit_id: id_visit}
+    var data = { commentaire: text, note: value, visit_id: id_visit }
     console.log(data);
     utils.fetchReadyData('/rapport/create', {
       method: 'PUT',
       body: JSON.stringify(data),
-      headers: { 'Content-Type': 'application/json'}
-    }).then(function(){
-      console.log('ok')
-      navigation.navigate('Home')
-    }).catch(function(){
-      console.log('pas ok')
+      headers: { 'Content-Type': 'application/json' }
+    }).then(function (res) {
+      if (res.error) {
+        console.log(res.error);
+      } else {
+        navigation.navigate('Home')
+      }
+    }).catch(function () {
     })
 
-  } 
+  }
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
 
@@ -106,42 +108,42 @@ export default function NoteDetails({ route, navigation }) {
     <View style={styles.upContainer} >
       <Header navigation={navigation} />
       <View style={styles.container}>
-      <Text style={styles.hotelTitle}>{nom}</Text>
-      <ScrollView style={styles.scrollV}>
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle} onChange={console.log("hello")}>
-            Ajouter un commentaire
+        <Text style={styles.hotelTitle}>{nom}</Text>
+        <ScrollView style={styles.scrollV}>
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle} onChange={console.log("hello")}>
+              Ajouter un commentaire
           </Text>
-          <View style={styles.textInputContainer}>
-            <TextInput
-              style={styles.textInput}
-              multiline={true}
-              numberOfLines={6}
-              value={text}
-              placeholder="Notez les élements importants"
-              onChangeText={(text) => setText(text)}
-            />
+            <View style={styles.textInputContainer}>
+              <TextInput
+                style={styles.textInput}
+                multiline={true}
+                numberOfLines={6}
+                value={text}
+                placeholder="Notez les élements importants"
+                onChangeText={(text) => setText(text)}
+              />
+            </View>
           </View>
-        </View>
 
-        <View style={styles.section}>
-        <Text style={styles.sectionTitle} onChange={console.log("hello")}>
-            Selectionner une note
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle} onChange={console.log("hello")}>
+              Selectionner une note
           </Text>
-          <NumericInput maxValue={60} value={value} onChange={value => setValue({value})} />
+            <NumericInput maxValue={60} value={value} onChange={value => setValue(value)} />
+          </View>
+
+
+        </ScrollView>
+
+        <View style={styles.actionBtn}>
+          <TouchableOpacity style={styles.btnBack} onPress={() => navigation.goBack()}>
+            <Text style={styles.btnTextDark}>Retour</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleSubmitRapport} style={styles.btnConfirm}>
+            <Text style={styles.btnText}>Sauvegarder</Text>
+          </TouchableOpacity>
         </View>
-
-
-      </ScrollView>
-
-      <View style={styles.actionBtn}>
-        <TouchableOpacity style={styles.btnBack} onPress={() => navigation.goBack()}>
-          <Text style={styles.btnTextDark}>Retour</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleSubmitRapport} style={styles.btnConfirm}>
-          <Text style={styles.btnText}>Sauvegarder</Text>
-        </TouchableOpacity>
-      </View>
       </View>
     </View>
   );
