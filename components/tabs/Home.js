@@ -19,6 +19,7 @@ export default function Home(props) {
   const [selectedDate, setSelectedDate] = useState(new Date() || '');
   const [openDatePicker, setOpenDatePicker] = useState(false);
   const [list, setList] = useState([]);
+  const [forceSelectedDate, setForceSelectedDate] = useState(false)
 
   // Methods
   const navigateToProposalDetails = (id_visit, id, nom, adresse, ville, priority, code_postal, start, end) => {
@@ -43,7 +44,7 @@ export default function Home(props) {
 
   useEffect(() => {
     const url = "/visite?mine=1&day=" + moment(selectedDate).format("YYYY-MM-DD")
-
+    console.log(selectedDate);
     utils.fetchJson(url, {})
       .then(res => {
         setList(res.data)
@@ -51,12 +52,12 @@ export default function Home(props) {
       })
       .catch(error => console.log(error))
 
-  }, [selectedDate]);
+  }, [selectedDate, forceSelectedDate]);
 
   useEffect(() => {
     const reload = props.navigation.addListener('focus', () => {
       // relaod page
-
+      setForceSelectedDate(!forceSelectedDate)
     });
     return reload
   }, [props.navigation])

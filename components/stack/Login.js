@@ -26,7 +26,6 @@ export default function Login({ navigation }) {
       setErrorForm('ERROR_2')
     } else {
       utils.fetchForm("/auth/signin", {
-
         "email": stateEmail,
         "password": statePassword
       }).then(response => {
