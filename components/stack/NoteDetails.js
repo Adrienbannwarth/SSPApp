@@ -18,11 +18,12 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import NumericInput from 'react-native-numeric-input'
 import { Camera } from 'expo-camera'
+import Header from "../Header";
+
 
 
 import utils from '../../utils/app.utils';
 
-import Header from "../Header";
 
 import { ScrollView } from "react-native-gesture-handler";
 import { NavigationEvents } from "react-navigation";
@@ -94,11 +95,6 @@ export default function NoteDetails({ route, navigation }) {
     })();
   }, []);
 
-  useEffect(() => {
-    console.log(id_visit)
-    console.log(nom)
-  }, [])
-
   if (hasPermission === null) {
     return <View />;
   }
@@ -107,7 +103,9 @@ export default function NoteDetails({ route, navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.upContainer} >
+      <Header navigation={navigation} />
+      <View style={styles.container}>
       <Text style={styles.hotelTitle}>{nom}</Text>
       <ScrollView style={styles.scrollV}>
         <View style={styles.section}>
@@ -144,11 +142,15 @@ export default function NoteDetails({ route, navigation }) {
           <Text style={styles.btnText}>Sauvegarder</Text>
         </TouchableOpacity>
       </View>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  upContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     padding: 15,
